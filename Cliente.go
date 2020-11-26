@@ -81,7 +81,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	totalParts := splitFile("./Books/El_maravilloso_Mago_de_Oz-L._Frank_Baum.pdf")
+	totalParts := splitFile("El_maravilloso_Mago_de_Oz-L._Frank_Baum.pdf")
 
 	fmt.Println("Se dividio el archivo en : ", totalParts)
 
