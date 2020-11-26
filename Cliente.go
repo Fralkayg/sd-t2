@@ -27,8 +27,8 @@ func helloWorld(conn *grpc.ClientConn) {
 	fmt.Println("Mensaje: ", response.Mensaje)
 }
 
-func splitFile(file string) int {
-	fileToBeChunked := "./Books/" + file // change here!
+func splitFile(targetFile string) int {
+	fileToBeChunked := "./Books/" + targetFile // change here!
 
 	file, err := os.Open(fileToBeChunked)
 
@@ -59,7 +59,7 @@ func splitFile(file string) int {
 		file.Read(partBuffer)
 
 		// write to disk
-		fileName := "./Client/Chunks/" + file + "_" + strconv.FormatUint(i+1, 10)
+		fileName := "./Client/Chunks/" + targetFile + "_" + strconv.FormatUint(i+1, 10)
 		_, err := os.Create(fileName)
 
 		if err != nil {
