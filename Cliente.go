@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"log"
-
+	"fmt"
 	pb "./Service"
 	"google.golang.org/grpc"
 )
@@ -16,9 +16,10 @@ const (
 func helloWorld(conn *grpc.ClientConn) {
 	c := pb.NewFileManagementServiceClient(conn)
 
-	response, error := c.SayHello(context.Background(), &pb.HelloRequest{
+	response, _ := c.SayHello(context.Background(), &pb.HelloRequest{
 		Mensaje: "Christian"})
-	log.printf(response.Mensaje)
+
+	fmt.Println("Mensaje: ", response.Mensaje)
 }
 
 func main() {
