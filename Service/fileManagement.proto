@@ -1,0 +1,14 @@
+syntax = "proto3";
+package fileManagement;
+
+service FileManagementService{
+    rpc SayHello(HelloRequest) returns (HelloReply){}
+}
+
+message HelloRequest{
+    string Mensaje = 1;
+}
+
+message HelloReply{
+    string Mensaje = 1;
+}
