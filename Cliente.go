@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	pb "./Service"
@@ -14,6 +15,10 @@ const (
 
 func helloWorld(conn *grpc.ClientConn) {
 	c := pb.NewFileManagementServiceClient(conn)
+
+	response, error := c.SayHello(context.Background(), &pb.HelloRequest{
+		Mensaje: "Christian"})
+	log.printf(response.Mensaje)
 }
 
 func main() {
