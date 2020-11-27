@@ -109,6 +109,7 @@ func displayLibrary() []string {
 
 	for _, file := range files {
 		fmt.Println(i, ":", file)
+		i++
 	}
 	return files
 }
@@ -122,10 +123,10 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 		fmt.Println("Escoja libro a subir")
 		files := displayLibrary()
 		fmt.Scanln(&option)
-		if bookIndex > len(files) || bookIndex <= 0 {
+		if bookIndex > len(files) || bookIndex < 0 {
 			fmt.Println("Opción invalida. Reingresar")
 		} else {
-			chunkedFile := splitFile(files[bookIndex])
+			chunkedFile := splitFile(files[bookIndex-1])
 
 			fmt.Println("Cantidad de partes: ", chunkedFile.TotalParts)
 
