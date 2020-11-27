@@ -122,7 +122,7 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 	for validOption {
 		fmt.Println("Escoja libro a subir")
 		files := displayLibrary()
-		fmt.Scanln(&option)
+		fmt.Scanln(&bookIndex)
 		if bookIndex > len(files) || bookIndex < 0 {
 			fmt.Println("Opción invalida. Reingresar")
 		} else {
