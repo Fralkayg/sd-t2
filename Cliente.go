@@ -18,6 +18,11 @@ const (
 	defaultName = "world"
 )
 
+type ChunkedFile struct {
+	TotalParts int
+	ChunkName  []string
+}
+
 func helloWorld(conn *grpc.ClientConn) {
 	c := pb.NewFileManagementServiceClient(conn)
 
@@ -27,7 +32,7 @@ func helloWorld(conn *grpc.ClientConn) {
 	fmt.Println("Mensaje: ", response.Mensaje)
 }
 
-func splitFile(targetFile string) int {
+func splitFile(targetFile string) ChunkedFile {
 	fileToBeChunked := "./Books/" + targetFile // change here!
 
 	file, err := os.Open(fileToBeChunked)
@@ -49,6 +54,9 @@ func splitFile(targetFile string) int {
 
 	totalPartsNum := uint64(math.Ceil(float64(fileSize) / float64(fileChunk)))
 
+	var chunkedFile ChunkedFile
+	chunkedFile.TotalParts = int(totalPartsNum)
+
 	fmt.Printf("Splitting to %d pieces.\n", totalPartsNum)
 
 	for i := uint64(0); i < totalPartsNum; i++ {
@@ -62,6 +70,8 @@ func splitFile(targetFile string) int {
 		fileName := "./Client/Chunks/" + targetFile + "_" + strconv.FormatUint(i+1, 10)
 		_, err := os.Create(fileName)
 
+		chunkedFile.ChunkName = append(chunkedFile.ChunkName, fileName)
+
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -71,7 +81,7 @@ func splitFile(targetFile string) int {
 		ioutil.WriteFile(fileName, partBuffer, os.ModeAppend)
 		fmt.Println("Split to : ", fileName)
 	}
-	return int(totalPartsNum)
+	return chunkedFile
 }
 
 func main() {
@@ -81,9 +91,12 @@ func main() {
 	}
 	defer conn.Close()
 
-	totalParts := splitFile("El_maravilloso_Mago_de_Oz-L._Frank_Baum.pdf")
+	chunkedFile := splitFile("El_maravilloso_Mago_de_Oz-L._Frank_Baum.pdf")
+	fmt.Println("Cantidad de partes: ", chunkedFile.TotalParts)
 
-	fmt.Println("Se dividio el archivo en : ", totalParts)
+	for i := 0; i < chunkedFile.TotalParts; i++ {
+		fmt.Println("Parte: ", chunkedFile.ChunkName[i])
+	}
 
 	helloWorld(conn)
 
