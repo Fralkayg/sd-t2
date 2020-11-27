@@ -3,6 +3,17 @@ package fileManagement;
 
 service FileManagementService{
     rpc SayHello(HelloRequest) returns (HelloReply){}
+    rpc SendChunk(ChunkInformation) returns (ChunkStatus){}
+}
+
+message ChunkInformation{
+    bytes Chunk = 1;
+    int ChunkIndex = 2;
+    string FileName = 3;
+}
+
+message ChunkStatus{
+    string Status = 1;
 }
 
 message HelloRequest{

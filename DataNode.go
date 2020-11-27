@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"io/ioutil"
 	"log"
 	"net"
+	"os"
 
 	pb "./Service"
 
@@ -22,6 +24,18 @@ type server struct {
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.GetMensaje())
 	return &pb.HelloReply{Mensaje: "Hello " + in.GetMensaje()}, nil
+}
+
+func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.ChunkStatus, error) {
+	fileName := in.FileName + "_" + in.ChunkIndex
+	_, err := os.Create("Chunks/" + fileName)
+
+	if err != nil {
+		os.Exit(1)
+	}
+
+	ioutil.WriteFile("Chunks/"+fileName, in.Chunk, os.ModeAppend)
+	return &pb.ChunkStatus{Status: fileName + "OK"}, nil
 }
 
 func main() {

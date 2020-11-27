@@ -20,6 +20,7 @@ const (
 )
 
 type ChunkedFile struct {
+	FileName   string
 	TotalParts int
 	ChunkName  []string
 }
@@ -57,6 +58,7 @@ func splitFile(targetFile string) ChunkedFile {
 
 	var chunkedFile ChunkedFile
 	chunkedFile.TotalParts = int(totalPartsNum)
+	chunkedFile.FileName = targetFile
 
 	fmt.Printf("Splitting to %d pieces.\n", totalPartsNum)
 
@@ -84,6 +86,19 @@ func splitFile(targetFile string) ChunkedFile {
 		fmt.Println("Split to : ", fileName)
 	}
 	return chunkedFile
+}
+
+func obtainChunk(filePath string) []byte {
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return content
 }
 
 //https://flaviocopes.com/go-list-files/
@@ -128,12 +143,31 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 		} else {
 			chunkedFile := splitFile(files[bookIndex-1])
 
-			fmt.Println("Cantidad de partes: ", chunkedFile.TotalParts)
-
 			for i := 0; i < chunkedFile.TotalParts; i++ {
-				fmt.Println("Parte: ", chunkedFile.ChunkName[i])
-			}
+				chunk := obtainChunk(chunkedFile.ChunkName[i])
 
+				c := pb.NewFileManagementServiceClient(conn)
+
+				response, _ := c.SayHello(context.Background(), &pb.HelloRequest{
+					Mensaje: "Christian"})
+
+				fmt.Println("Mensaje: ", response.Mensaje)
+				//Mandar chunk
+				if option == 1 {
+					//Centralizado
+					status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
+						Chunk:      chunk,
+						ChunkIndex: i + 1,
+						FileName:   chunkedFile.FileName,
+					})
+
+					fmt.Println(status)
+				}
+
+				if option == 2 {
+					//Distribuido
+				}
+			}
 			validOption = false
 		}
 
@@ -176,8 +210,6 @@ func main() {
 	}
 	defer conn.Close()
 
-	// chunkedFile := splitFile("El_maravilloso_Mago_de_Oz-L._Frank_Baum.pdf")
-
 	validOption = true
 
 	for validOption {
@@ -194,6 +226,7 @@ func main() {
 			fmt.Println("Bajar libro")
 		case 3:
 			fmt.Println("Adiós!")
+			validOption = false
 		default:
 			//
 		}
