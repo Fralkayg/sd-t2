@@ -179,8 +179,9 @@ func main() {
 	// chunkedFile := splitFile("El_maravilloso_Mago_de_Oz-L._Frank_Baum.pdf")
 
 	validOption = true
-	fmt.Println("Ingrese una opción válida:")
+
 	for validOption {
+		fmt.Println("Ingrese una opción válida:")
 		fmt.Println("1: Subir libro")
 		fmt.Println("2: Descargar libro")
 		fmt.Println("3: Salir")
@@ -194,7 +195,7 @@ func main() {
 		case 3:
 			fmt.Println("Adiós!")
 		default:
-			fmt.Println("Ingrese una opción válida:")
+			//
 		}
 
 	}
