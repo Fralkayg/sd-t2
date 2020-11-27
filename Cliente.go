@@ -144,6 +144,7 @@ func centralizedOrDistributed(conn *grpc.ClientConn) {
 		fmt.Println("1: Centralizado")
 		fmt.Println("2: Distribuido")
 		fmt.Println("3: Volver")
+		fmt.Scanln(&option)
 
 		switch option {
 		case 1:
