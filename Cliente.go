@@ -63,6 +63,7 @@ func splitFile(targetFile string) int {
 		_, err := os.Create(fileName)
 
 		if err != nil {
+			fmt.Println("cago aca")
 			fmt.Println(err)
 			os.Exit(1)
 		}
