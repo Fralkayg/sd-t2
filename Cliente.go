@@ -74,6 +74,7 @@ func splitFile(targetFile string) ChunkedFile {
 		chunkedFile.ChunkName = append(chunkedFile.ChunkName, fileName)
 
 		if err != nil {
+			fmt.Println("cago aca")
 			fmt.Println(err)
 			os.Exit(1)
 		}
