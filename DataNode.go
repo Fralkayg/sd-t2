@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strconv"
 
 	pb "./Service"
 
@@ -27,7 +28,7 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.ChunkStatus, error) {
-	fileName := in.FileName + "_" + in.ChunkIndex
+	fileName := in.FileName + "_" + strconv.Itoa(int(in.ChunkIndex))
 	_, err := os.Create("Chunks/" + fileName)
 
 	if err != nil {

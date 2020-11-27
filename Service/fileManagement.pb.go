@@ -8,15 +8,14 @@ package fileManagement
 
 import (
 	context "context"
-	reflect "reflect"
-	sync "sync"
-
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -30,6 +29,116 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
+type ChunkInformation struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Chunk      []byte `protobuf:"bytes,1,opt,name=Chunk,proto3" json:"Chunk,omitempty"`
+	ChunkIndex int32  `protobuf:"varint,2,opt,name=ChunkIndex,proto3" json:"ChunkIndex,omitempty"`
+	FileName   string `protobuf:"bytes,3,opt,name=FileName,proto3" json:"FileName,omitempty"`
+}
+
+func (x *ChunkInformation) Reset() {
+	*x = ChunkInformation{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_fileManagement_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChunkInformation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChunkInformation) ProtoMessage() {}
+
+func (x *ChunkInformation) ProtoReflect() protoreflect.Message {
+	mi := &file_fileManagement_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChunkInformation.ProtoReflect.Descriptor instead.
+func (*ChunkInformation) Descriptor() ([]byte, []int) {
+	return file_fileManagement_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ChunkInformation) GetChunk() []byte {
+	if x != nil {
+		return x.Chunk
+	}
+	return nil
+}
+
+func (x *ChunkInformation) GetChunkIndex() int32 {
+	if x != nil {
+		return x.ChunkIndex
+	}
+	return 0
+}
+
+func (x *ChunkInformation) GetFileName() string {
+	if x != nil {
+		return x.FileName
+	}
+	return ""
+}
+
+type ChunkStatus struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Status string `protobuf:"bytes,1,opt,name=Status,proto3" json:"Status,omitempty"`
+}
+
+func (x *ChunkStatus) Reset() {
+	*x = ChunkStatus{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_fileManagement_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChunkStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChunkStatus) ProtoMessage() {}
+
+func (x *ChunkStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_fileManagement_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChunkStatus.ProtoReflect.Descriptor instead.
+func (*ChunkStatus) Descriptor() ([]byte, []int) {
+	return file_fileManagement_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ChunkStatus) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 type HelloRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -41,7 +150,7 @@ type HelloRequest struct {
 func (x *HelloRequest) Reset() {
 	*x = HelloRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[0]
+		mi := &file_fileManagement_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -54,7 +163,7 @@ func (x *HelloRequest) String() string {
 func (*HelloRequest) ProtoMessage() {}
 
 func (x *HelloRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[0]
+	mi := &file_fileManagement_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -67,7 +176,7 @@ func (x *HelloRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HelloRequest.ProtoReflect.Descriptor instead.
 func (*HelloRequest) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{0}
+	return file_fileManagement_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *HelloRequest) GetMensaje() string {
@@ -88,7 +197,7 @@ type HelloReply struct {
 func (x *HelloReply) Reset() {
 	*x = HelloReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[1]
+		mi := &file_fileManagement_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -101,7 +210,7 @@ func (x *HelloReply) String() string {
 func (*HelloReply) ProtoMessage() {}
 
 func (x *HelloReply) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[1]
+	mi := &file_fileManagement_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -114,7 +223,7 @@ func (x *HelloReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HelloReply.ProtoReflect.Descriptor instead.
 func (*HelloReply) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{1}
+	return file_fileManagement_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *HelloReply) GetMensaje() string {
@@ -129,19 +238,32 @@ var File_fileManagement_proto protoreflect.FileDescriptor
 var file_fileManagement_proto_rawDesc = []byte{
 	0x0a, 0x14, 0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e, 0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61,
-	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x28, 0x0a, 0x0c, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65,
-	0x22, 0x26, 0x0a, 0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x18,
-	0x0a, 0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x32, 0x5f, 0x0a, 0x15, 0x46, 0x69, 0x6c, 0x65,
-	0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
-	0x65, 0x12, 0x46, 0x0a, 0x08, 0x53, 0x61, 0x79, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x12, 0x1c, 0x2e,
-	0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x48,
-	0x65, 0x6c, 0x6c, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x66, 0x69,
+	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x64, 0x0a, 0x10, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x49,
+	0x6e, 0x66, 0x6f, 0x72, 0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x43, 0x68,
+	0x75, 0x6e, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x43, 0x68, 0x75, 0x6e, 0x6b,
+	0x12, 0x1e, 0x0a, 0x0a, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x0a, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x49, 0x6e, 0x64, 0x65, 0x78,
+	0x12, 0x1a, 0x0a, 0x08, 0x46, 0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x08, 0x46, 0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d, 0x65, 0x22, 0x25, 0x0a, 0x0b,
+	0x43, 0x68, 0x75, 0x6e, 0x6b, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x53,
+	0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x53, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x22, 0x28, 0x0a, 0x0c, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x22, 0x26, 0x0a,
+	0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x18, 0x0a, 0x07, 0x4d,
+	0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x4d, 0x65,
+	0x6e, 0x73, 0x61, 0x6a, 0x65, 0x32, 0xad, 0x01, 0x0a, 0x15, 0x46, 0x69, 0x6c, 0x65, 0x4d, 0x61,
+	0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
+	0x46, 0x0a, 0x08, 0x53, 0x61, 0x79, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x12, 0x1c, 0x2e, 0x66, 0x69,
 	0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x48, 0x65, 0x6c,
-	0x6c, 0x6f, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x6c, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x66, 0x69, 0x6c, 0x65,
+	0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x48, 0x65, 0x6c, 0x6c, 0x6f,
+	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x00, 0x12, 0x4c, 0x0a, 0x09, 0x53, 0x65, 0x6e, 0x64, 0x43,
+	0x68, 0x75, 0x6e, 0x6b, 0x12, 0x20, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67,
+	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x49, 0x6e, 0x66, 0x6f, 0x72,
+	0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x1b, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e,
+	0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x53, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -156,16 +278,20 @@ func file_fileManagement_proto_rawDescGZIP() []byte {
 	return file_fileManagement_proto_rawDescData
 }
 
-var file_fileManagement_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_fileManagement_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_fileManagement_proto_goTypes = []interface{}{
-	(*HelloRequest)(nil), // 0: fileManagement.HelloRequest
-	(*HelloReply)(nil),   // 1: fileManagement.HelloReply
+	(*ChunkInformation)(nil), // 0: fileManagement.ChunkInformation
+	(*ChunkStatus)(nil),      // 1: fileManagement.ChunkStatus
+	(*HelloRequest)(nil),     // 2: fileManagement.HelloRequest
+	(*HelloReply)(nil),       // 3: fileManagement.HelloReply
 }
 var file_fileManagement_proto_depIdxs = []int32{
-	0, // 0: fileManagement.FileManagementService.SayHello:input_type -> fileManagement.HelloRequest
-	1, // 1: fileManagement.FileManagementService.SayHello:output_type -> fileManagement.HelloReply
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 0: fileManagement.FileManagementService.SayHello:input_type -> fileManagement.HelloRequest
+	0, // 1: fileManagement.FileManagementService.SendChunk:input_type -> fileManagement.ChunkInformation
+	3, // 2: fileManagement.FileManagementService.SayHello:output_type -> fileManagement.HelloReply
+	1, // 3: fileManagement.FileManagementService.SendChunk:output_type -> fileManagement.ChunkStatus
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -178,7 +304,7 @@ func file_fileManagement_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_fileManagement_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HelloRequest); i {
+			switch v := v.(*ChunkInformation); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -190,6 +316,30 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChunkStatus); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_fileManagement_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*HelloRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_fileManagement_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*HelloReply); i {
 			case 0:
 				return &v.state
@@ -208,7 +358,7 @@ func file_fileManagement_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_fileManagement_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -235,6 +385,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type FileManagementServiceClient interface {
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+	SendChunk(ctx context.Context, in *ChunkInformation, opts ...grpc.CallOption) (*ChunkStatus, error)
 }
 
 type fileManagementServiceClient struct {
@@ -254,9 +405,19 @@ func (c *fileManagementServiceClient) SayHello(ctx context.Context, in *HelloReq
 	return out, nil
 }
 
+func (c *fileManagementServiceClient) SendChunk(ctx context.Context, in *ChunkInformation, opts ...grpc.CallOption) (*ChunkStatus, error) {
+	out := new(ChunkStatus)
+	err := c.cc.Invoke(ctx, "/fileManagement.FileManagementService/SendChunk", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileManagementServiceServer is the server API for FileManagementService service.
 type FileManagementServiceServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	SendChunk(context.Context, *ChunkInformation) (*ChunkStatus, error)
 }
 
 // UnimplementedFileManagementServiceServer can be embedded to have forward compatible implementations.
@@ -265,6 +426,9 @@ type UnimplementedFileManagementServiceServer struct {
 
 func (*UnimplementedFileManagementServiceServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+}
+func (*UnimplementedFileManagementServiceServer) SendChunk(context.Context, *ChunkInformation) (*ChunkStatus, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendChunk not implemented")
 }
 
 func RegisterFileManagementServiceServer(s *grpc.Server, srv FileManagementServiceServer) {
@@ -289,6 +453,24 @@ func _FileManagementService_SayHello_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileManagementService_SendChunk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChunkInformation)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagementServiceServer).SendChunk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/fileManagement.FileManagementService/SendChunk",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagementServiceServer).SendChunk(ctx, req.(*ChunkInformation))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _FileManagementService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "fileManagement.FileManagementService",
 	HandlerType: (*FileManagementServiceServer)(nil),
@@ -296,6 +478,10 @@ var _FileManagementService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SayHello",
 			Handler:    _FileManagementService_SayHello_Handler,
+		},
+		{
+			MethodName: "SendChunk",
+			Handler:    _FileManagementService_SendChunk_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
