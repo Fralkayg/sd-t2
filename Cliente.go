@@ -133,6 +133,8 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 			for i := 0; i < chunkedFile.TotalParts; i++ {
 				fmt.Println("Parte: ", chunkedFile.ChunkName[i])
 			}
+
+			validOption = false
 		}
 
 	}
@@ -153,8 +155,10 @@ func centralizedOrDistributed(conn *grpc.ClientConn) {
 		switch option {
 		case 1:
 			uploadBook(conn, option)
+			validOption = false
 		case 2:
 			uploadBook(conn, option)
+			validOption = false
 		case 3:
 			validOption = false
 		default:
