@@ -7,6 +7,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	pb "./Service"
@@ -84,7 +85,81 @@ func splitFile(targetFile string) ChunkedFile {
 	return chunkedFile
 }
 
+//https://flaviocopes.com/go-list-files/
+func displayLibrary() []string {
+	var files []string
+
+	root := "./Books/"
+
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		files = append(files, path)
+		return nil
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	var i int
+	i = 1
+
+	for _, file := range files {
+		fmt.Println(i, ":", file)
+	}
+	return files
+}
+
+func uploadBook(conn *grpc.ClientConn, option int) {
+	var validOption bool
+	var bookIndex int
+	validOption = true
+
+	for validOption {
+		fmt.Println("Escoja libro a subir")
+		files := displayLibrary()
+		fmt.Scanln(&option)
+		if bookIndex > len(files) || bookIndex <= 0 {
+			fmt.Println("Opción invalida. Reingresar")
+		} else {
+			chunkedFile := splitFile(files[bookIndex])
+
+			fmt.Println("Cantidad de partes: ", chunkedFile.TotalParts)
+
+			for i := 0; i < chunkedFile.TotalParts; i++ {
+				fmt.Println("Parte: ", chunkedFile.ChunkName[i])
+			}
+		}
+
+	}
+}
+
+func centralizedOrDistributed(conn *grpc.ClientConn) {
+	var validOption bool
+	var option int
+	validOption = true
+
+	for validOption {
+		fmt.Println("Ingrese una opción")
+		fmt.Println("1: Centralizado")
+		fmt.Println("2: Distribuido")
+		fmt.Println("3: Volver")
+
+		switch option {
+		case 1:
+			uploadBook(conn, option)
+		case 2:
+			uploadBook(conn, option)
+		case 3:
+			validOption = false
+		default:
+			fmt.Println("Opción inválida. Reingrese.")
+		}
+	}
+}
+
 func main() {
+	var validOption bool
+	var option int
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -92,10 +167,28 @@ func main() {
 	defer conn.Close()
 
 	chunkedFile := splitFile("El_maravilloso_Mago_de_Oz-L._Frank_Baum.pdf")
-	fmt.Println("Cantidad de partes: ", chunkedFile.TotalParts)
 
-	for i := 0; i < chunkedFile.TotalParts; i++ {
-		fmt.Println("Parte: ", chunkedFile.ChunkName[i])
+	validOption = true
+	fmt.Println("Ingrese una opción válida:")
+	for validOption {
+		fmt.Println("1: Subir libro")
+		fmt.Println("2: Descargar libro")
+		fmt.Println("3: Salir")
+		fmt.Scanln(&option)
+		switch option {
+		case 1:
+			//Subir libro
+			fmt.Println("Subir libro")
+			centralizedOrDistributed(conn)
+		case 2:
+			//Bajar libro
+			fmt.Println("Bajar libro")
+		case 3:
+			fmt.Println("Adiós!")
+		default:
+			fmt.Println("Ingrese una opción válida:")
+		}
+
 	}
 
 	helloWorld(conn)
