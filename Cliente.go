@@ -93,7 +93,10 @@ func displayLibrary() []string {
 	root := "./Books/"
 
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		files = append(files, path)
+		if info.IsDir() {
+			return nil
+		}
+		files = append(files, info.Name())
 		return nil
 	})
 
@@ -179,11 +182,9 @@ func main() {
 		fmt.Scanln(&option)
 		switch option {
 		case 1:
-			//Subir libro
-			fmt.Println("Subir libro")
+			// fmt.Println("Subir libro")
 			centralizedOrDistributed(conn)
 		case 2:
-			//Bajar libro
 			fmt.Println("Bajar libro")
 		case 3:
 			fmt.Println("Adiós!")
