@@ -157,7 +157,7 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 					//Centralizado
 					status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
 						Chunk:      chunk,
-						ChunkIndex: i + 1,
+						ChunkIndex: int32(i + 1),
 						FileName:   chunkedFile.FileName,
 					})
 

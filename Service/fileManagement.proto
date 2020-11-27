@@ -8,7 +8,7 @@ service FileManagementService{
 
 message ChunkInformation{
     bytes Chunk = 1;
-    int ChunkIndex = 2;
+    int32 ChunkIndex = 2;
     string FileName = 3;
 }
 
