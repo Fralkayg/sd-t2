@@ -148,10 +148,6 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 
 				c := pb.NewFileManagementServiceClient(conn)
 
-				response, _ := c.SayHello(context.Background(), &pb.HelloRequest{
-					Mensaje: "Christian"})
-
-				fmt.Println("Mensaje: ", response.Mensaje)
 				//Mandar chunk
 				if option == 1 {
 					//Centralizado
@@ -233,6 +229,6 @@ func main() {
 
 	}
 
-	helloWorld(conn)
+	// helloWorld(conn)
 
 }
