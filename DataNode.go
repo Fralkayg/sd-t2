@@ -130,6 +130,7 @@ func generateCentralizedDistribution(s *server) {
 	fmt.Println(distributionReply.Machines[2].Status)
 
 	if distributionReply.Machines[0].Status == 1 {
+		fmt.Println(len(distributionReply.Machines[0].Distribution))
 		for j := 0; j < len(distributionReply.Machines[0].Distribution); j++ {
 			//Crear chunk
 			fmt.Println("Maquina: " + distributionReply.Machines[0].Address)
@@ -138,6 +139,7 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 	if distributionReply.Machines[1].Status == 1 {
+		fmt.Println(len(distributionReply.Machines[1].Distribution))
 		for j := 0; j < len(distributionReply.Machines[1].Distribution); j++ {
 			//Crear chunk
 			fmt.Println("Maquina: " + distributionReply.Machines[1].Address)
@@ -146,6 +148,7 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 	if distributionReply.Machines[2].Status == 1 {
+		fmt.Println(len(distributionReply.Machines[2].Distribution))
 		for j := 0; j < len(distributionReply.Machines[2].Distribution); j++ {
 			//Crear chunk
 			fmt.Println("Maquina: " + distributionReply.Machines[2].Address)
