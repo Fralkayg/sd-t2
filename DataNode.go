@@ -51,6 +51,18 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 		if in.Option == 1 {
 			//Centralizado
 			fmt.Println("Generar distribucion centralizada")
+			for i := 0; i < s.file.totalParts; i++ {
+				fileName := s.file.fileName + "_" + strconv.Itoa(int(s.file.chunks[i].ChunkIndex))
+				_, err := os.Create("Chunks/" + fileName)
+
+				if err != nil {
+					os.Exit(1)
+				}
+
+				ioutil.WriteFile("Chunks/"+fileName, s.file.chunks[i].Chunk, os.ModeAppend)
+
+			}
+
 		} else {
 			//Distribuido
 			fmt.Println("Generar distribucion distribuida")
@@ -65,15 +77,7 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 		s.file.chunks = append(s.file.chunks, chunk)
 	}
 
-	fileName := in.FileName + "_" + strconv.Itoa(int(in.ChunkIndex))
-	_, err := os.Create("Chunks/" + fileName)
-
-	if err != nil {
-		os.Exit(1)
-	}
-
-	ioutil.WriteFile("Chunks/"+fileName, in.Chunk, os.ModeAppend)
-	return &pb.ChunkStatus{Status: fileName + "OK"}, nil
+	return &pb.ChunkStatus{Status: "Parte " + strconv.Itoa(int(in.ChunkIndex)) + " OK"}, nil
 }
 
 func main() {
