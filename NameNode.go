@@ -38,7 +38,7 @@ func checkNodeStatus(address string) bool {
 	fmt.Println("Entro a verificar estado")
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		fmt.Println(err)
 	}
 	// defer conn.Close()
 	fmt.Println("Conexion establecida")
