@@ -41,12 +41,12 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 
 		if i == 53 {
 			firstNodeStatus = status
-			availableNodes++
 		} else if i == 54 {
 			secondNodeStatus = status
-			availableNodes++
 		} else {
 			thirdNodeStatus = status
+		}
+		if status == 1 {
 			availableNodes++
 		}
 
