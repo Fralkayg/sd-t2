@@ -4,6 +4,15 @@ package fileManagement;
 service FileManagementService{
     rpc SayHello(HelloRequest) returns (HelloReply){}
     rpc SendChunk(ChunkInformation) returns (ChunkStatus){}
+    rpc CheckNodeStatus(StatusRequest) returns (StatusReply){}
+}
+
+message StatusRequest{
+    bool Online = 1;
+}
+
+message StatusReply{
+    bool Online = 1;
 }
 
 message ChunkInformation{

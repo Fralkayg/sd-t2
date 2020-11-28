@@ -38,6 +38,10 @@ const (
 	defaultName     = "world"
 )
 
+func (s *server) CheckStatus(ctx context.Context, in *pb.StatusRequest) (*pb.StatusReply, error) {
+	return &pb.StatusReply{Online: true}, nil
+}
+
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.GetMensaje())
 	return &pb.HelloReply{Mensaje: "Hello " + in.GetMensaje()}, nil
