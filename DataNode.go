@@ -52,8 +52,6 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 		s.file.chunks = append(s.file.chunks, chunk)
 
 		if in.Option == 1 {
-			//Centralizado
-			fmt.Println("Generar distribucion centralizada")
 			generateCentralizedDistribution(s)
 
 			// for i := 0; i < s.file.totalParts; i++ {
@@ -86,6 +84,7 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 }
 
 func generateCentralizedDistribution(s *server) {
+	fmt.Println("Generando distribucion centralizada")
 	var firstNodeDistribution []int32
 	var secondNodeDistribution []int32
 	var thirdNodeDistribution []int32
@@ -101,6 +100,7 @@ func generateCentralizedDistribution(s *server) {
 			thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
 		}
 	}
+	fmt.Println("Paso la generacion de arreglos")
 
 	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -110,6 +110,7 @@ func generateCentralizedDistribution(s *server) {
 
 	c := pb2.NewDataToNameServiceClient(conn)
 
+	fmt.Println("Se conecto")
 	distributionReply, err := c.SendDistributionProposal(context.Background(), &pb2.DistributionRequest{
 		FileName:   s.file.fileName,
 		TotalParts: int32(s.file.totalParts),
@@ -119,6 +120,8 @@ func generateCentralizedDistribution(s *server) {
 			{Address: "dist55", Distribution: thirdNodeDistribution, Status: 1},
 		},
 	})
+
+	fmt.Println("Envio datos")
 
 	if err != nil {
 		fmt.Println(err)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 
@@ -19,7 +20,8 @@ const (
 )
 
 func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.DistributionRequest) (*pb2.DistributionReply, error) {
-	return &pb2.DistributionReply{FileName: "WEAXD"}, nil
+	fmt.Println("Llego el archivo " + in.FileName)
+	return &pb2.DistributionReply{}, nil
 }
 
 func main() {
