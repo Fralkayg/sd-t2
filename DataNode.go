@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
+	"os"
 	"strconv"
 
 	pb "./Service"
@@ -122,11 +124,52 @@ func generateCentralizedDistribution(s *server) {
 		},
 	})
 
+	if distributionReply.Machines[0].Status == 1 {
+		for i := 0; i < len(distributionReply.Machines[0].Distribution); i++ {
+			//Crear chunk
+			fmt.Println("Maquina: " + distributionReply.Machines[0].Address)
+			// Chunk: []byte = s.file.chunks[distributionReply.Machines[0].Distribution[i]].Chunk)
+			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[i]].ChunkIndex)))
+		}
+	}
+	if distributionReply.Machines[1].Status == 1 {
+		for i := 0; i < len(distributionReply.Machines[1].Distribution); i++ {
+			//Crear chunk
+			fmt.Println("Maquina: " + distributionReply.Machines[1].Address)
+			// Chunk: []byte = s.file.chunks[distributionReply.Machines[1].Distribution[i]].Chunk)
+			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[i]].ChunkIndex)))
+		}
+	}
+	if distributionReply.Machines[2].Status == 1 {
+		for i := 0; i < len(distributionReply.Machines[2].Distribution); i++ {
+			//Crear chunk
+			fmt.Println("Maquina: " + distributionReply.Machines[2].Address)
+			// Chunk: []byte = s.file.chunks[distributionReply.Machines[2].Distribution[i]].Chunk)
+			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[i]].ChunkIndex)))
+		}
+	}
+
+	// saveChunks(s, distributionReply)
+
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	fmt.Println(distributionReply.FileName)
+}
+
+func saveChunks(s *server, distributionReply *pb2.DistributionReply) {
+	for i := 0; i < s.file.totalParts; i++ {
+		fileName := s.file.fileName + "_" + strconv.Itoa(int(s.file.chunks[i].ChunkIndex))
+		_, err := os.Create("Chunks/" + fileName)
+
+		if err != nil {
+			os.Exit(1)
+		}
+
+		ioutil.WriteFile("Chunks/"+fileName, s.file.chunks[i].Chunk, os.ModeAppend)
+
+	}
 }
 
 func main() {
