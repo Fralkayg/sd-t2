@@ -40,7 +40,7 @@ func checkNodeStatus(address string) bool {
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	defer conn.Close()
+	// defer conn.Close()
 	fmt.Println("Conexion establecida")
 	c := pb.NewFileManagementServiceClient(conn)
 
