@@ -35,6 +35,11 @@ type Chunk struct {
 	ChunkIndex int
 }
 
+const (
+	nameNodeAddress = "dist56:50051"
+	defaultName     = "world"
+)
+
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.GetMensaje())
 	return &pb.HelloReply{Mensaje: "Hello " + in.GetMensaje()}, nil
@@ -78,6 +83,44 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 	}
 
 	return &pb.ChunkStatus{Status: "Parte " + strconv.Itoa(int(in.ChunkIndex)) + " OK"}, nil
+}
+
+func generateCentralizedDistribution(s *server) {
+	var firstNodeDistribution []int32
+	var secondNodeDistribution []int32
+	var thirdNodeDistribution []int32
+
+	for i := 0; i < s.file.totalParts; i++ {
+		var result int32
+		result = int32(i % 3)
+		if result == 0 {
+			firstNodeDistribution = append(firstNodeDistribution, int32(i))
+		} else if result == 1 {
+			secondNodeDistribution = append(secondNodeDistribution, int32(i))
+		} else {
+			thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
+		}
+	}
+
+	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := pb.NewDataToNameServiceClient(conn)
+
+	distributionReply, _ := c.SendDistributionProposal(context.Background(), &pb.DistributionRequest{
+		FileName:   s.file.fileName,
+		TotalParts: s.file.totalParts,
+		Machines: []*pb.DistributionRequest_MachineInformation{
+			{Address: "dist53", Distribution: firstNodeDistribution, Status: 1},
+			{Address: "dist54", Distribution: secondNodeDistribution, Status: 1},
+			{Address: "dist55", Distribution: thirdNodeDistribution, Status: 1},
+		},
+	})
+
+	fmt.Println(distributionReply.FileName)
 }
 
 func main() {
