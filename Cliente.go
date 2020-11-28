@@ -163,6 +163,7 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 					LastChunk:  lastChunk,
 					Option:     int32(option),
 					TotalParts: int32(chunkedFile.TotalParts),
+					Address:    "dist54:50051",
 				})
 
 				fmt.Println(status)
