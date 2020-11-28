@@ -38,7 +38,7 @@ const (
 	defaultName     = "world"
 )
 
-func (s *server) CheckStatus(ctx context.Context, in *pb.StatusRequest) (*pb.StatusReply, error) {
+func (s *server) CheckNodeStatus(ctx context.Context, in *pb.StatusRequest) (*pb.StatusReply, error) {
 	return &pb.StatusReply{Online: true}, nil
 }
 
