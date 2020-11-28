@@ -12,7 +12,6 @@ import (
 type server struct {
 	seguimiento int
 	lock        bool
-	file        File
 }
 
 const (
