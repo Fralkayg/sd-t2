@@ -65,7 +65,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 	if err != nil {
 		log.Println(err)
 	}
-	if _, err := file.WriteString(in.FileName + " " + strconv.Itoa(int(in.TotalParts))); err != nil {
+	if _, err := file.WriteString(in.FileName + " " + strconv.Itoa(int(in.TotalParts)) + "\n"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -74,13 +74,13 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 		result = int32(i % 3)
 		if result == 0 && firstNodeStatus == 1 {
 			firstNodeDistribution = append(firstNodeDistribution, int32(i))
-			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist53:50051")
+			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist53:50051\n")
 		} else if result == 1 && secondNodeStatus == 1 {
 			secondNodeDistribution = append(secondNodeDistribution, int32(i))
-			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist54:50051")
+			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist54:50051\n")
 		} else if thirdNodeStatus == 1 {
 			thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
-			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist55:50051")
+			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist55:50051\n")
 		}
 	}
 	file.Close()
