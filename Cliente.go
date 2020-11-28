@@ -161,7 +161,7 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 					ChunkIndex: int32(i + 1),
 					FileName:   chunkedFile.FileName,
 					LastChunk:  lastChunk,
-					Opcion:     int32(option),
+					Option:     int32(option),
 					TotalParts: int32(chunkedFile.TotalParts),
 				})
 
