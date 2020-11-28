@@ -3,10 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net"
-	"os"
 	"strconv"
 
 	pb "./Service"
@@ -56,17 +54,19 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 		if in.Option == 1 {
 			//Centralizado
 			fmt.Println("Generar distribucion centralizada")
-			for i := 0; i < s.file.totalParts; i++ {
-				fileName := s.file.fileName + "_" + strconv.Itoa(int(s.file.chunks[i].ChunkIndex))
-				_, err := os.Create("Chunks/" + fileName)
+			generateCentralizedDistribution(s)
 
-				if err != nil {
-					os.Exit(1)
-				}
+			// for i := 0; i < s.file.totalParts; i++ {
+			// 	fileName := s.file.fileName + "_" + strconv.Itoa(int(s.file.chunks[i].ChunkIndex))
+			// 	_, err := os.Create("Chunks/" + fileName)
 
-				ioutil.WriteFile("Chunks/"+fileName, s.file.chunks[i].Chunk, os.ModeAppend)
+			// 	if err != nil {
+			// 		os.Exit(1)
+			// 	}
 
-			}
+			// 	ioutil.WriteFile("Chunks/"+fileName, s.file.chunks[i].Chunk, os.ModeAppend)
+
+			// }
 
 		} else {
 			//Distribuido
