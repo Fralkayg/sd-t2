@@ -27,22 +27,26 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 		address := "dist" + strconv.Itoa(i) + port
 		fmt.Println(address)
 		status := checkNodeStatus(address)
-		fmt.Println("Estado de dist" + strconv.Itoa(i) + ": " + strconv.FormatBool(status))
+		fmt.Println("Estado de dist" + strconv.Itoa(i) + ": ")
+		fmt.Println(status)
 	}
 
 	return &pb2.DistributionReply{}, nil
 }
 
 func checkNodeStatus(address string) bool {
+	fmt.Println("Entro a verificar estado")
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-
+	fmt.Println("Conexion establecida")
 	c := pb.NewFileManagementServiceClient(conn)
 
+	fmt.Println("Confirmando estado")
 	_, connectionError := c.CheckNodeStatus(context.Background(), &pb.StatusRequest{Online: true})
+	fmt.Println("Estado confirmado")
 	if connectionError != nil {
 		return false
 	}
