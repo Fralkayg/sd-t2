@@ -41,6 +41,16 @@ const (
 	defaultName     = "world"
 )
 
+func (s *server) SaveChunk(ctx context.Context, in *pb.StoreChunkRequest) (*pb.StoreChunkReply, error) {
+	_, err := os.Create("Chunks/" + in.FileName)
+
+	if err != nil {
+		os.Exit(1)
+	}
+
+	ioutil.WriteFile("Chunks/"+in.FileName, in.Chunk, os.ModeAppend)
+}
+
 func (s *server) CheckNodeStatus(ctx context.Context, in *pb.StatusRequest) (*pb.StatusReply, error) {
 	return &pb.StatusReply{Online: true}, nil
 }
