@@ -109,6 +109,12 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 
 	file.Close()
 
+	if availableNodes == 3 {
+		fmt.Println("Propuesta aceptada.")
+	} else {
+		fmt.Println("Se rechazo la propuesta enviada. Se reenvio una nueva propuesta válida.")
+	}
+
 	return &pb2.DistributionReply{
 		FileName:   in.FileName,
 		TotalParts: int32(in.TotalParts),
