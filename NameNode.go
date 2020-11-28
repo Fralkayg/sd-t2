@@ -36,7 +36,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 
 func checkNodeStatus(address string) bool {
 	fmt.Println("Entro a verificar estado")
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 	}

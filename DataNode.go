@@ -106,7 +106,7 @@ func generateCentralizedDistribution(s *server) {
 	}
 	fmt.Println("Paso la generacion de arreglos")
 
-	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

@@ -203,7 +203,7 @@ func centralizedOrDistributed(conn *grpc.ClientConn) {
 func main() {
 	var validOption bool
 	var option int
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
