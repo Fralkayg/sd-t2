@@ -146,7 +146,7 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 	if distributionReply.Machines[2].Status == 1 {
-		for j := 0; i < len(distributionReply.Machines[2].Distribution); j++ {
+		for j := 0; j < len(distributionReply.Machines[2].Distribution); j++ {
 			//Crear chunk
 			fmt.Println("Maquina: " + distributionReply.Machines[2].Address)
 			// Chunk: []byte = s.file.chunks[distributionReply.Machines[2].Distribution[i]].Chunk)
