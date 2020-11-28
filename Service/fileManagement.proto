@@ -5,6 +5,16 @@ service FileManagementService{
     rpc SayHello(HelloRequest) returns (HelloReply){}
     rpc SendChunk(ChunkInformation) returns (ChunkStatus){}
     rpc CheckNodeStatus(StatusRequest) returns (StatusReply){}
+    rpc SaveChunk(StoreChunkRequest) returns (StoreChunkReply){}
+}
+
+message StoreChunkRequest{
+    string FileName = 1;
+    bytes Chunk = 2;
+}
+
+message StoreChunkReply{
+    string Status = 1;
 }
 
 message StatusRequest{
@@ -22,6 +32,7 @@ message ChunkInformation{
     bool LastChunk = 4;
     int32 Option = 5;
     int32 TotalParts = 6;
+    string Address = 7;
 }
 
 message ChunkStatus{

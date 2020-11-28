@@ -19,9 +19,10 @@ const (
 )
 
 type server struct {
-	seguimiento int
-	lock        bool
-	file        File
+	seguimiento    int
+	lock           bool
+	file           File
+	currentAddress string
 }
 
 type File struct {
@@ -56,6 +57,7 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 		chunk.ChunkIndex = int(in.ChunkIndex)
 		chunk.Chunk = in.Chunk
 		s.file.chunks = append(s.file.chunks, chunk)
+		s.currentAddress = in.Address
 
 		if in.Option == 1 {
 			generateCentralizedDistribution(s)
@@ -136,6 +138,32 @@ func generateCentralizedDistribution(s *server) {
 			fmt.Println("Maquina: " + distributionReply.Machines[0].Address)
 			// Chunk: []byte = s.file.chunks[distributionReply.Machines[0].Distribution[i]].Chunk)
 			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex)))
+			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex))
+			chunk := s.file.chunks[distributionReply.Machines[0].Distribution[j]].Chunk
+			if distributionReply.Machines[0].Address == s.currentAddress {
+				_, err := os.Create("Chunks/" + fileName)
+
+				if err != nil {
+					os.Exit(1)
+				}
+
+				ioutil.WriteFile("Chunks/"+fileName, chunk, os.ModeAppend)
+			} else {
+				conn, err := grpc.Dial(distributionReply.Machines[0].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+
+				response, _ := c.SaveChunk(context.Background(), &pb.StoreChunkRequest{
+					FileName: fileName,
+					Chunk:    chunk,
+				})
+
+				fmt.Println("Mensaje: ", response.Status)
+			}
 		}
 	}
 	if distributionReply.Machines[1].Status == 1 {
@@ -145,6 +173,33 @@ func generateCentralizedDistribution(s *server) {
 			fmt.Println("Maquina: " + distributionReply.Machines[1].Address)
 			// Chunk: []byte = s.file.chunks[distributionReply.Machines[1].Distribution[i]].Chunk)
 			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex)))
+			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex))
+			chunk := s.file.chunks[distributionReply.Machines[1].Distribution[j]].Chunk
+			if distributionReply.Machines[1].Address == s.currentAddress {
+
+				_, err := os.Create("Chunks/" + fileName)
+
+				if err != nil {
+					os.Exit(1)
+				}
+
+				ioutil.WriteFile("Chunks/"+fileName, chunk, os.ModeAppend)
+			} else {
+				conn, err := grpc.Dial(distributionReply.Machines[1].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+
+				response, _ := c.SaveChunk(context.Background(), &pb.StoreChunkRequest{
+					FileName: fileName,
+					Chunk:    chunk,
+				})
+
+				fmt.Println("Mensaje: ", response.Status)
+			}
 		}
 	}
 	if distributionReply.Machines[2].Status == 1 {
@@ -154,6 +209,33 @@ func generateCentralizedDistribution(s *server) {
 			fmt.Println("Maquina: " + distributionReply.Machines[2].Address)
 			// Chunk: []byte = s.file.chunks[distributionReply.Machines[2].Distribution[i]].Chunk)
 			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex)))
+			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex))
+			chunk := s.file.chunks[distributionReply.Machines[2].Distribution[j]].Chunk
+			if distributionReply.Machines[2].Address == s.currentAddress {
+				_, err := os.Create("Chunks/" + fileName)
+
+				if err != nil {
+					os.Exit(1)
+				}
+
+				ioutil.WriteFile("Chunks/"+fileName, chunk, os.ModeAppend)
+			} else {
+				conn, err := grpc.Dial(distributionReply.Machines[2].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+
+				response, _ := c.SaveChunk(context.Background(), &pb.StoreChunkRequest{
+					FileName: fileName,
+					Chunk:    chunk,
+				})
+
+				fmt.Println("Mensaje: ", response.Status)
+
+			}
 		}
 	}
 
