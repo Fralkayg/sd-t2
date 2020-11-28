@@ -29,6 +29,8 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 	var firstNodeStatus int32
 	var secondNodeStatus int32
 	var thirdNodeStatus int32
+	var availableNodes int32
+	availableNodes = 0
 
 	fmt.Println("Llego el archivo " + in.FileName)
 
@@ -39,27 +41,18 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 
 		if i == 53 {
 			firstNodeStatus = status
+			availableNodes++
 		} else if i == 54 {
 			secondNodeStatus = status
+			availableNodes++
 		} else {
 			thirdNodeStatus = status
+			availableNodes++
 		}
 
 		fmt.Println("Estado de dist" + strconv.Itoa(i) + ": ")
 		fmt.Println(status)
 	}
-
-	// for i := 0; i < s.file.totalParts; i++ {
-	// 	fileName := s.file.fileName + "_" + strconv.Itoa(int(s.file.chunks[i].ChunkIndex))
-	// 	_, err := os.Create("Chunks/" + fileName)
-
-	// 	if err != nil {
-	// 		os.Exit(1)
-	// 	}
-
-	// 	ioutil.WriteFile("Chunks/"+fileName, s.file.chunks[i].Chunk, os.ModeAppend)
-
-	// }
 
 	file, err := os.OpenFile("./LOG.txt", os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
@@ -71,18 +64,48 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 
 	for i := 0; i < int(in.TotalParts); i++ {
 		var result int32
-		result = int32(i % 3)
-		if result == 0 && firstNodeStatus == 1 {
-			firstNodeDistribution = append(firstNodeDistribution, int32(i))
-			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist53:50051\n")
-		} else if result == 1 && secondNodeStatus == 1 {
-			secondNodeDistribution = append(secondNodeDistribution, int32(i))
-			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist54:50051\n")
-		} else if thirdNodeStatus == 1 {
-			thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
-			writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist55:50051\n")
+		if availableNodes == 3 {
+			result = int32(i % 3)
+			if result == 0 && firstNodeStatus == 1 {
+				firstNodeDistribution = append(firstNodeDistribution, int32(i))
+				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist53:50051\n")
+			} else if result == 1 && secondNodeStatus == 1 {
+				secondNodeDistribution = append(secondNodeDistribution, int32(i))
+				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist54:50051\n")
+			} else if thirdNodeStatus == 1 {
+				thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
+				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist55:50051\n")
+			}
+		} else if availableNodes == 2 {
+			result = int32(i % 2)
+			if firstNodeStatus == 1 && secondNodeStatus == 1 {
+				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist54:50051", result, i)
+				firstNodeDistribution = firstDistribution
+				secondNodeDistribution = secondDistribution
+			} else if firstNodeStatus == 1 && thirdNodeStatus == 1 {
+				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist55:50051", result, i)
+				firstNodeDistribution = firstDistribution
+				thirdNodeDistribution = secondDistribution
+			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
+				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
+				secondNodeDistribution = firstDistribution
+				thirdNodeDistribution = secondDistribution
+			}
+		} else {
+			if firstNodeStatus == 1 {
+				firstNodeDistribution = append(firstNodeDistribution, int32(i))
+				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist53:50051\n")
+
+			} else if secondNodeStatus == 1 {
+				secondNodeDistribution = append(firstNodeDistribution, int32(i))
+				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist54:50051\n")
+			} else {
+				thirdNodeDistribution = append(firstNodeDistribution, int32(i))
+				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist55:50051\n")
+			}
 		}
 	}
+
 	file.Close()
 
 	return &pb2.DistributionReply{
@@ -94,6 +117,19 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 			{Address: "dist55:50051", Distribution: thirdNodeDistribution, Status: thirdNodeStatus},
 		},
 	}, nil
+}
+
+func makeDistribution(file *os.File, fileName string, address1 string, address2 string, result int32, i int) ([]int32, []int32) {
+	var firstNodeDistribution []int32
+	var secondNodeDistribution []int32
+	if result == 0 {
+		firstNodeDistribution = append(firstNodeDistribution, int32(i))
+		writeToLogFile(file, fileName+"_"+strconv.Itoa(int(i))+" "+address1+"\n")
+	} else if result == 1 {
+		secondNodeDistribution = append(secondNodeDistribution, int32(i))
+		writeToLogFile(file, fileName+"_"+strconv.Itoa(int(i))+" "+address2+"\n")
+	}
+	return firstNodeDistribution, secondNodeDistribution
 }
 
 func writeToLogFile(file *os.File, line string) {
