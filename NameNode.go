@@ -81,16 +81,16 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 			result = int32(i % 2)
 			if firstNodeStatus == 1 && secondNodeStatus == 1 {
 				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist54:50051", result, i)
-				firstNodeDistribution = firstDistribution
-				secondNodeDistribution = secondDistribution
+				copy(firstNodeDistribution, firstDistribution)
+				copy(secondNodeDistribution, secondDistribution)
 			} else if firstNodeStatus == 1 && thirdNodeStatus == 1 {
 				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist55:50051", result, i)
-				firstNodeDistribution = firstDistribution
-				thirdNodeDistribution = secondDistribution
+				copy(firstNodeDistribution, firstDistribution)
+				copy(thirdNodeDistribution, secondDistribution)
 			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
 				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
-				secondNodeDistribution = firstDistribution
-				thirdNodeDistribution = secondDistribution
+				copy(secondNodeDistribution, firstDistribution)
+				copy(thirdNodeDistribution, secondNodeDistribution)
 			}
 		} else {
 			if firstNodeStatus == 1 {
