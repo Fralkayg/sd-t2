@@ -49,6 +49,8 @@ func (s *server) SaveChunk(ctx context.Context, in *pb.StoreChunkRequest) (*pb.S
 	}
 
 	ioutil.WriteFile("Chunks/"+in.FileName, in.Chunk, os.ModeAppend)
+
+	return &pb.StoreChunkReply{Status: "OK"}, nil
 }
 
 func (s *server) CheckNodeStatus(ctx context.Context, in *pb.StatusRequest) (*pb.StatusReply, error) {
