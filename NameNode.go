@@ -81,16 +81,28 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 			result = int32(i % 2)
 			if firstNodeStatus == 1 && secondNodeStatus == 1 {
 				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist54:50051", result, i)
-				copy(firstNodeDistribution, firstDistribution)
-				copy(secondNodeDistribution, secondDistribution)
+				firstNodeDistribution = firstDistribution
+				secondNodeDistribution = secondDistribution
+				fmt.Println(firstDistribution)
+				fmt.Println(firstNodeDistribution)
+				fmt.Println(secondDistribution)
+				fmt.Println(secondNodeDistribution)
 			} else if firstNodeStatus == 1 && thirdNodeStatus == 1 {
 				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist55:50051", result, i)
-				copy(firstNodeDistribution, firstDistribution)
-				copy(thirdNodeDistribution, secondDistribution)
+				firstNodeDistribution = firstDistribution
+				thirdNodeDistribution = secondDistribution
+				fmt.Println(firstDistribution)
+				fmt.Println(firstNodeDistribution)
+				fmt.Println(secondDistribution)
+				fmt.Println(thirdNodeDistribution)
 			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
 				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
-				copy(secondNodeDistribution, firstDistribution)
-				copy(thirdNodeDistribution, secondDistribution)
+				secondNodeDistribution = firstDistribution
+				thirdNodeDistribution = secondDistribution
+				fmt.Println(firstDistribution)
+				fmt.Println(secondNodeDistribution)
+				fmt.Println(secondDistribution)
+				fmt.Println(thirdNodeDistribution)
 			}
 		} else {
 			if firstNodeStatus == 1 {
