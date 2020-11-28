@@ -53,7 +53,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 		fmt.Println("Estado de dist" + strconv.Itoa(i) + ": ")
 		fmt.Println(status)
 	}
-	fmt.Println("Nodos disponibles: " + strconv.Itoa(availableNodes))
+	fmt.Println("Nodos disponibles: " + strconv.Itoa(int(availableNodes)))
 
 	file, err := os.OpenFile("./LOG.txt", os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
