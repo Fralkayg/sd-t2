@@ -90,7 +90,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
 				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
 				copy(secondNodeDistribution, firstDistribution)
-				copy(thirdNodeDistribution, secondNodeDistribution)
+				copy(thirdNodeDistribution, secondDistribution)
 			}
 		} else {
 			if firstNodeStatus == 1 {
