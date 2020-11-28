@@ -110,7 +110,7 @@ func generateCentralizedDistribution(s *server) {
 
 	c := pb2.NewDataToNameServiceClient(conn)
 
-	distributionReply, _ := c.SendDistributionProposal(context.Background(), &pb2.DistributionRequest{
+	distributionReply, err := c.SendDistributionProposal(context.Background(), &pb2.DistributionRequest{
 		FileName:   s.file.fileName,
 		TotalParts: int32(s.file.totalParts),
 		Machines: []*pb2.DistributionRequest_MachineInformation{
@@ -119,6 +119,10 @@ func generateCentralizedDistribution(s *server) {
 			{Address: "dist55", Distribution: thirdNodeDistribution, Status: 1},
 		},
 	})
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	fmt.Println(distributionReply.FileName)
 }
