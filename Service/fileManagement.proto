@@ -10,6 +10,9 @@ message ChunkInformation{
     bytes Chunk = 1;
     int32 ChunkIndex = 2;
     string FileName = 3;
+    bool LastChunk = 4;
+    int32 Option = 5;
+    int32 TotalParts = 6;
 }
 
 message ChunkStatus{

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -20,6 +21,18 @@ const (
 type server struct {
 	seguimiento int
 	lock        bool
+	file        File
+}
+
+type File struct {
+	fileName   string
+	totalParts int
+	chunks     []Chunk
+}
+
+type Chunk struct {
+	Chunk      []byte
+	ChunkIndex int
 }
 
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
@@ -28,6 +41,30 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.ChunkStatus, error) {
+	if in.LastChunk {
+		fmt.Println("Llego el último chunk.")
+		var chunk Chunk
+		chunk.ChunkIndex = int(in.ChunkIndex)
+		chunk.Chunk = in.Chunk
+		s.file.chunks = append(s.file.chunks, chunk)
+
+		if in.Option == 1 {
+			//Centralizado
+			fmt.Println("Generar distribucion centralizada")
+		} else {
+			//Distribuido
+			fmt.Println("Generar distribucion distribuida")
+		}
+	} else {
+		s.file.fileName = in.FileName
+		s.file.totalParts = int(in.TotalParts)
+
+		var chunk Chunk
+		chunk.ChunkIndex = int(in.ChunkIndex)
+		chunk.Chunk = in.Chunk
+		s.file.chunks = append(s.file.chunks, chunk)
+	}
+
 	fileName := in.FileName + "_" + strconv.Itoa(int(in.ChunkIndex))
 	_, err := os.Create("Chunks/" + fileName)
 

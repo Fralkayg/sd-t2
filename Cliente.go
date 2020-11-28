@@ -144,25 +144,28 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 			chunkedFile := splitFile(files[bookIndex-1])
 
 			for i := 0; i < chunkedFile.TotalParts; i++ {
+				var lastChunk bool
+
+				if i == chunkedFile.TotalParts-1 {
+					lastChunk = true
+				} else {
+					lastChunk = false
+				}
+
 				chunk := obtainChunk(chunkedFile.ChunkName[i])
 
 				c := pb.NewFileManagementServiceClient(conn)
 
-				//Mandar chunk
-				if option == 1 {
-					//Centralizado
-					status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
-						Chunk:      chunk,
-						ChunkIndex: int32(i + 1),
-						FileName:   chunkedFile.FileName,
-					})
+				status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
+					Chunk:      chunk,
+					ChunkIndex: int32(i + 1),
+					FileName:   chunkedFile.FileName,
+					LastChunk:  lastChunk,
+					Opcion:     int32(option),
+					TotalParts: int32(chunkedFile.TotalParts),
+				})
 
-					fmt.Println(status)
-				}
-
-				if option == 2 {
-					//Distribuido
-				}
+				fmt.Println(status)
 			}
 			validOption = false
 		}
