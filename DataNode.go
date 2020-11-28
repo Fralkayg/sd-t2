@@ -124,6 +124,11 @@ func generateCentralizedDistribution(s *server) {
 		},
 	})
 
+	fmt.Println("Estados")
+	fmt.Println(distributionReply.Machines[0].Status)
+	fmt.Println(distributionReply.Machines[1].Status)
+	fmt.Println(distributionReply.Machines[2].Status)
+
 	if distributionReply.Machines[0].Status == 1 {
 		for i := 0; i < len(distributionReply.Machines[0].Distribution); i++ {
 			//Crear chunk
