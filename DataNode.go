@@ -130,27 +130,27 @@ func generateCentralizedDistribution(s *server) {
 	fmt.Println(distributionReply.Machines[2].Status)
 
 	if distributionReply.Machines[0].Status == 1 {
-		for i := 0; i < len(distributionReply.Machines[0].Distribution); i++ {
+		for j := 0; j < len(distributionReply.Machines[0].Distribution); j++ {
 			//Crear chunk
 			fmt.Println("Maquina: " + distributionReply.Machines[0].Address)
 			// Chunk: []byte = s.file.chunks[distributionReply.Machines[0].Distribution[i]].Chunk)
-			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[i]].ChunkIndex)))
+			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex)))
 		}
 	}
 	if distributionReply.Machines[1].Status == 1 {
-		for i := 0; i < len(distributionReply.Machines[1].Distribution); i++ {
+		for j := 0; j < len(distributionReply.Machines[1].Distribution); j++ {
 			//Crear chunk
 			fmt.Println("Maquina: " + distributionReply.Machines[1].Address)
 			// Chunk: []byte = s.file.chunks[distributionReply.Machines[1].Distribution[i]].Chunk)
-			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[i]].ChunkIndex)))
+			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex)))
 		}
 	}
 	if distributionReply.Machines[2].Status == 1 {
-		for i := 0; i < len(distributionReply.Machines[2].Distribution); i++ {
+		for j := 0; i < len(distributionReply.Machines[2].Distribution); j++ {
 			//Crear chunk
 			fmt.Println("Maquina: " + distributionReply.Machines[2].Address)
 			// Chunk: []byte = s.file.chunks[distributionReply.Machines[2].Distribution[i]].Chunk)
-			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[i]].ChunkIndex)))
+			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex)))
 		}
 	}
 
