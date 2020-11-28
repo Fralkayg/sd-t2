@@ -10,7 +10,7 @@ import (
 	"strconv"
 
 	pb "./Service"
-
+	pb2 "./Service2"
 	"google.golang.org/grpc"
 )
 
@@ -108,12 +108,12 @@ func generateCentralizedDistribution(s *server) {
 	}
 	defer conn.Close()
 
-	c := pb.NewDataToNameServiceClient(conn)
+	c := pb2.NewDataToNameServiceClient(conn)
 
-	distributionReply, _ := c.SendDistributionProposal(context.Background(), &pb.DistributionRequest{
+	distributionReply, _ := c.SendDistributionProposal(context.Background(), &pb2.DistributionRequest{
 		FileName:   s.file.fileName,
-		TotalParts: s.file.totalParts,
-		Machines: []*pb.DistributionRequest_MachineInformation{
+		TotalParts: int32(s.file.totalParts),
+		Machines: []*pb2.DistributionRequest_MachineInformation{
 			{Address: "dist53", Distribution: firstNodeDistribution, Status: 1},
 			{Address: "dist54", Distribution: secondNodeDistribution, Status: 1},
 			{Address: "dist55", Distribution: thirdNodeDistribution, Status: 1},
