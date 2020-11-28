@@ -9,6 +9,12 @@ import (
 	"google.golang.org/grpc"
 )
 
+type server struct {
+	seguimiento int
+	lock        bool
+	file        File
+}
+
 const (
 	port = ":50051"
 )
