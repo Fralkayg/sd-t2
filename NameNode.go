@@ -80,29 +80,39 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 		} else if availableNodes == 2 {
 			result = int32(i % 2)
 			if firstNodeStatus == 1 && secondNodeStatus == 1 {
-				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist54:50051", result, i)
-				firstNodeDistribution = firstDistribution
-				secondNodeDistribution = secondDistribution
-				fmt.Println(firstDistribution)
-				fmt.Println(firstNodeDistribution)
-				fmt.Println(secondDistribution)
-				fmt.Println(secondNodeDistribution)
+				firstDistribution, first, secondDistribution, second := makeDistribution(file, in.FileName, "dist53:50051", "dist54:50051", result, i)
+				if first {
+					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
+				} else {
+					secondNodeDistribution = append(secondNodeDistribution, secondDistribution)
+				}
+
+				// fmt.Println(firstDistribution)
+				// fmt.Println(firstNodeDistribution)
+				// fmt.Println(secondDistribution)
+				// fmt.Println(secondNodeDistribution)
 			} else if firstNodeStatus == 1 && thirdNodeStatus == 1 {
-				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist53:50051", "dist55:50051", result, i)
-				firstNodeDistribution = firstDistribution
-				thirdNodeDistribution = secondDistribution
-				fmt.Println(firstDistribution)
-				fmt.Println(firstNodeDistribution)
-				fmt.Println(secondDistribution)
-				fmt.Println(thirdNodeDistribution)
+				firstDistribution, first, secondDistribution, second := makeDistribution(file, in.FileName, "dist53:50051", "dist55:50051", result, i)
+				if first {
+					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
+				} else {
+					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+				}
+				// fmt.Println(firstDistribution)
+				// fmt.Println(firstNodeDistribution)
+				// fmt.Println(secondDistribution)
+				// fmt.Println(thirdNodeDistribution)
 			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
-				firstDistribution, secondDistribution := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
-				secondNodeDistribution = firstDistribution
-				thirdNodeDistribution = secondDistribution
-				fmt.Println(firstDistribution)
-				fmt.Println(secondNodeDistribution)
-				fmt.Println(secondDistribution)
-				fmt.Println(thirdNodeDistribution)
+				firstDistribution, first, secondDistribution, second := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
+				if first {
+					secondNodeDistribution = append(firstNodeDistribution, firstDistribution)
+				} else {
+					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+				}
+				// fmt.Println(firstDistribution)
+				// fmt.Println(secondNodeDistribution)
+				// fmt.Println(secondDistribution)
+				// fmt.Println(thirdNodeDistribution)
 			}
 		} else {
 			if firstNodeStatus == 1 {
@@ -138,17 +148,21 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 	}, nil
 }
 
-func makeDistribution(file *os.File, fileName string, address1 string, address2 string, result int32, i int) ([]int32, []int32) {
-	var firstNodeDistribution []int32
-	var secondNodeDistribution []int32
+func makeDistribution(file *os.File, fileName string, address1 string, address2 string, result int32, i int) (int32, bool, int32, bool) {
+	var firstNodeDistribution int32
+	var secondNodeDistribution int32
+	first := false
+	second := false
 	if result == 0 {
-		firstNodeDistribution = append(firstNodeDistribution, int32(i))
+		firstNodeDistribution = int32(i)
+		first = true
 		writeToLogFile(file, fileName+"_"+strconv.Itoa(int(i))+" "+address1+"\n")
 	} else if result == 1 {
-		secondNodeDistribution = append(secondNodeDistribution, int32(i))
+		secondNodeDistribution = int32(i)
+		second = true
 		writeToLogFile(file, fileName+"_"+strconv.Itoa(int(i))+" "+address2+"\n")
 	}
-	return firstNodeDistribution, secondNodeDistribution
+	return firstNodeDistribution, first, secondNodeDistribution, second
 }
 
 func writeToLogFile(file *os.File, line string) {
