@@ -24,15 +24,17 @@ const (
 func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.DistributionRequest) (*pb2.DistributionReply, error) {
 	fmt.Println("Llego el archivo " + in.FileName)
 	for i := 53; i < 56; i++ {
-		status := checkNodeStatus("dist" + strconv.Itoa(i))
+		address := "dist" + strconv.Itoa(i) + port
+		fmt.Println(address)
+		status := checkNodeStatus(address)
 		fmt.Println("Estado de dist" + strconv.Itoa(i) + ": " + strconv.FormatBool(status))
 	}
 
 	return &pb2.DistributionReply{}, nil
 }
 
-func checkNodeStatus(ip string) bool {
-	conn, err := grpc.Dial(ip+port, grpc.WithInsecure(), grpc.WithBlock())
+func checkNodeStatus(address string) bool {
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
