@@ -80,7 +80,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 		} else if availableNodes == 2 {
 			result = int32(i % 2)
 			if firstNodeStatus == 1 && secondNodeStatus == 1 {
-				firstDistribution, first, secondDistribution, second := makeDistribution(file, in.FileName, "dist53:50051", "dist54:50051", result, i)
+				firstDistribution, first, secondDistribution, _ := makeDistribution(file, in.FileName, "dist53:50051", "dist54:50051", result, i)
 				if first {
 					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
 				} else {
@@ -92,7 +92,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 				// fmt.Println(secondDistribution)
 				// fmt.Println(secondNodeDistribution)
 			} else if firstNodeStatus == 1 && thirdNodeStatus == 1 {
-				firstDistribution, first, secondDistribution, second := makeDistribution(file, in.FileName, "dist53:50051", "dist55:50051", result, i)
+				firstDistribution, first, secondDistribution, _ := makeDistribution(file, in.FileName, "dist53:50051", "dist55:50051", result, i)
 				if first {
 					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
 				} else {
@@ -103,7 +103,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 				// fmt.Println(secondDistribution)
 				// fmt.Println(thirdNodeDistribution)
 			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
-				firstDistribution, first, secondDistribution, second := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
+				firstDistribution, first, secondDistribution, _ := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
 				if first {
 					secondNodeDistribution = append(firstNodeDistribution, firstDistribution)
 				} else {
