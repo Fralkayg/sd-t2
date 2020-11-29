@@ -396,6 +396,8 @@ func generateCentralizedDistribution(s *server) {
 	fmt.Println(distributionReply.Machines[2].Status)
 
 	if distributionReply.Machines[0].Status == 1 {
+		fmt.Println("Largo maquina 0: ")
+		fmt.Println(len(distributionReply.Machines[0].Distribution))
 		for j := 0; j < len(distributionReply.Machines[0].Distribution); j++ {
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[0].Distribution[j]].Chunk
@@ -426,6 +428,8 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 	if distributionReply.Machines[1].Status == 1 {
+		fmt.Println("Largo maquina 1: ")
+		fmt.Println(len(distributionReply.Machines[1].Distribution))
 		for j := 0; j < len(distributionReply.Machines[1].Distribution); j++ {
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[1].Distribution[j]].Chunk
@@ -457,6 +461,8 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 	if distributionReply.Machines[2].Status == 1 {
+		fmt.Println("Largo maquina 2: ")
+		fmt.Println(len(distributionReply.Machines[2].Distribution))
 		for j := 0; j < len(distributionReply.Machines[2].Distribution); j++ {
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[2].Distribution[j]].Chunk
