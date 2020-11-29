@@ -17,6 +17,7 @@ import (
 const (
 	address     = "dist54:50051"
 	defaultName = "world"
+	port        = "50051"
 )
 
 type ChunkedFile struct {
@@ -226,6 +227,7 @@ func connectToDataNode() (*grpc.ClientConn, string) {
 			return nil, ""
 		}
 	}
+	return nil, ""
 }
 
 func checkStatus(address string) (*grpc.ClientConn, int32) {
