@@ -15,7 +15,6 @@ import (
 )
 
 const (
-	address     = "dist54:50051"
 	defaultName = "world"
 	port        = ":50051"
 )
@@ -143,33 +142,38 @@ func uploadBook(option int) {
 			fmt.Println("Opción invalida. Reingresar")
 		} else {
 			chunkedFile := splitFile(files[bookIndex-1])
-			conn, address := connectToDataNode()
+			address := connectToDataNode()
 
-			if conn != nil {
-				for i := 0; i < chunkedFile.TotalParts; i++ {
-					var lastChunk bool
+			conn, err := grpc.Dial(address, grpc.WithInsecure())
+			if err != nil {
+				log.Fatalf("did not connect: %v", err)
+			}
+			defer conn.Close()
 
-					if i == chunkedFile.TotalParts-1 {
-						lastChunk = true
-					} else {
-						lastChunk = false
-					}
+			fmt.Println("paso")
+			for i := 0; i < chunkedFile.TotalParts; i++ {
+				var lastChunk bool
 
-					chunk := obtainChunk(chunkedFile.ChunkName[i])
-
-					c := pb.NewFileManagementServiceClient(conn)
-
-					status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
-						Chunk:      chunk,
-						ChunkIndex: int32(i),
-						FileName:   chunkedFile.FileName,
-						LastChunk:  lastChunk,
-						Option:     int32(option),
-						TotalParts: int32(chunkedFile.TotalParts),
-						Address:    address,
-					})
-					fmt.Println(status)
+				if i == chunkedFile.TotalParts-1 {
+					lastChunk = true
+				} else {
+					lastChunk = false
 				}
+
+				chunk := obtainChunk(chunkedFile.ChunkName[i])
+
+				c := pb.NewFileManagementServiceClient(conn)
+
+				status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
+					Chunk:      chunk,
+					ChunkIndex: int32(i),
+					FileName:   chunkedFile.FileName,
+					LastChunk:  lastChunk,
+					Option:     int32(option),
+					TotalParts: int32(chunkedFile.TotalParts),
+					Address:    address,
+				})
+				fmt.Println(status)
 			}
 
 			validOption = false
@@ -205,24 +209,24 @@ func centralizedOrDistributed() {
 	}
 }
 
-func connectToDataNode() (*grpc.ClientConn, string) {
+func connectToDataNode() string {
 	for i := 53; i < 56; i++ {
 		address := "dist" + strconv.Itoa(i) + port
 		fmt.Println(address)
-		conn, status := checkStatus(address)
+		_, status := checkStatus(address)
 
 		if i == 53 && status == 1 {
-			return conn, address
+			return address
 		} else if i == 54 && status == 1 {
-			return conn, address
+			return address
 		} else if i == 55 && status == 1 {
-			return conn, address
+			return address
 		} else {
 			fmt.Println("No hay un data node en línea para realizar la petición.")
-			return nil, ""
+			return ""
 		}
 	}
-	return nil, ""
+	return ""
 }
 
 func checkStatus(address string) (*grpc.ClientConn, int32) {
