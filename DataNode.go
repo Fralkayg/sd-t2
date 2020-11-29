@@ -41,6 +41,19 @@ const (
 	defaultName     = "world"
 )
 
+func (s *server) RetrieveChunk(ctx context.Context, in *pb.ChunkRequest) (*pb.ChunkReply, error) {
+	file, err := os.Open("./Chunks/" + in.FileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &pb.ChunkReply{Chunk: content}, nil
+}
+
 func (s *server) SaveChunk(ctx context.Context, in *pb.StoreChunkRequest) (*pb.StoreChunkReply, error) {
 	_, err := os.Create("Chunks/" + in.FileName)
 

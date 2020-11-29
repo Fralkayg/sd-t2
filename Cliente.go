@@ -213,12 +213,58 @@ func downloadBookMenu() {
 	downloadBook(logReply.Files, option-1)
 }
 
-func downloadBook(files []*pb2.LogReply_FileInfo, option int) {
+func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 	for i := 0; i < len(files); i++ {
 		if files[i].FileIndex == int32(option) {
 			for j := 0; j < len(files[i].Distribution); j++ {
-				fmt.Println(files[i].Distribution[j].Part)
-				fmt.Println(files[i].Distribution[j].Address)
+				conn, err := grpc.Dial(files[i].Distribution[j].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+				chunk, connectionError := c.RetrieveChunk(context.Background(), &pb.ChunkRequest{
+					FileName: files[i].Distribution[j].Part,
+				})
+
+				newFileName := files[i].FileName
+				_, err = os.Create(newFileName)
+
+				if err != nil {
+					fmt.Println(err)
+					os.Exit(1)
+				}
+
+				file, err = os.OpenFile(newFileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+
+				if err != nil {
+					fmt.Println(err)
+					os.Exit(1)
+				}
+
+				var writePosition int64 = 0
+
+				for j := uint64(0); j < len(files[i].Distribution); j++ {
+
+					chunkBufferBytes := chunk
+
+					n, err := file.Write(chunkBufferBytes)
+
+					if err != nil {
+						fmt.Println(err)
+						os.Exit(1)
+					}
+
+					file.Sync()
+
+					chunkBufferBytes = nil
+				}
+				file.Close()
+				if connectionError != nil {
+					fmt.Println("Hubo un error al descargar el archivo.")
+					return false
+				}
 			}
 		}
 	}

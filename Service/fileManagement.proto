@@ -6,6 +6,15 @@ service FileManagementService{
     rpc SendChunk(ChunkInformation) returns (ChunkStatus){}
     rpc CheckNodeStatus(StatusRequest) returns (StatusReply){}
     rpc SaveChunk(StoreChunkRequest) returns (StoreChunkReply){}
+    rpc RetrieveChunk(ChunkRequest) returns (ChunkReply){}
+}
+
+message ChunkRequest{
+    string FileName = 1;
+}
+
+message ChunkReply{
+    bytes Chunk = 1;
 }
 
 message StoreChunkRequest{
