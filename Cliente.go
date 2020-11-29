@@ -11,12 +11,14 @@ import (
 	"strconv"
 
 	pb "./Service"
+	pb2 "./Service2"
 	"google.golang.org/grpc"
 )
 
 const (
-	defaultName = "world"
-	port        = ":50051"
+	nameNodeAddress = "dist56:50051"
+	defaultName     = "world"
+	port            = ":50051"
 )
 
 type ChunkedFile struct {
@@ -182,6 +184,23 @@ func uploadBook(option int) {
 	}
 }
 
+func downloadBook() {
+	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := pb2.NewDataToNameServiceClient(conn)
+
+	logReply, er := c.ReadLogFile(context.Background(), &pb2.LogRequest{File: "LOG.txt"})
+	if er != nil {
+		fmt.Println("Error al leer el archivo LOG")
+	}
+
+	fmt.Println(logReply)
+}
+
 func centralizedOrDistributed() {
 	var validOption bool
 	var option int
@@ -267,7 +286,7 @@ func main() {
 		case 1:
 			centralizedOrDistributed()
 		case 2:
-			fmt.Println("Bajar libro")
+			downloadBook()
 		case 3:
 			fmt.Println("Adiós!")
 			validOption = false

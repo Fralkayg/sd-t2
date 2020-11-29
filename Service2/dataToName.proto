@@ -4,6 +4,27 @@ package dataToName;
 service DataToNameService{
     rpc SendDistributionProposal(DistributionRequest) returns (DistributionReply){}
     rpc SendDistribution(DistributionRequest2) returns (DistributionReply2){}
+    rpc ReadLogFile(LogRequest) returns (LogReply){}
+}
+
+message LogRequest{
+    string File = 1;
+}
+
+message LogReply{
+    message FileInfo{
+        string FileName = 1;
+        string TotalParts = 2;
+
+        message FileDistribution{
+            string Part = 1;
+            string Address = 2;
+        }
+
+        repeated FileDistribution Distribution = 3;
+        int32 FileIndex = 4;
+    }
+    repeated FileInfo Files = 1;
 }
 
 message DistributionRequest2{

@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"log"
 	"net"
 	"os"
 	"strconv"
+	"strings"
 
 	pb "./Service"
 	pb2 "./Service2"
@@ -21,6 +23,57 @@ type server struct {
 const (
 	port = ":50051"
 )
+
+func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogReply, error) {
+	f, err := os.Open("LOG.txt")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+
+	logReply := &pb2.LogReply{}
+
+	fileInformation := &pb2.LogReply_FileInfo{}
+
+	j := int32(0)
+
+	for scanner.Scan() {
+		aux := &pb2.LogReply_FileInfo{}
+		line := strings.Split(scanner.Text(), " ")
+
+		totalParts, _ := strconv.Atoi(line[1])
+
+		aux.FileName = line[0]
+		aux.TotalParts = totalParts
+
+		fileDistribution := &pb2.LogReply_FileInfo_FileDistribution{}
+
+		for i := 0; i < totalParts; i++ {
+			aux2 := &pb2.LogReply_FileInfo_FileDistribution{}
+			scanner.Scan()
+			filePart := strings.Split(scanner.Text(), " ")
+
+			aux2.Part = filePart[0]
+			aux2.Address = filePart[1]
+
+			fileDistribution = append(fileDistribution, aux2)
+		}
+
+		fileInformation = append(fileInformation, aux)
+
+		fmt.Println(scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return logReply, nil
+}
 
 func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest2) (*pb2.DistributionReply2, error) {
 	file, err := os.OpenFile("./LOG.txt", os.O_APPEND|os.O_WRONLY, 0600)
