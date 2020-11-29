@@ -216,6 +216,13 @@ func downloadBookMenu() {
 func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 	for i := 0; i < len(files); i++ {
 		if files[i].FileIndex == int32(option) {
+			newFileName := files[i].FileName
+			_, err = os.Create("./Downloads/" + newFileName)
+
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 			for j := 0; j < len(files[i].Distribution); j++ {
 				conn, err := grpc.Dial(files[i].Distribution[j].Address, grpc.WithInsecure())
 				if err != nil {
@@ -228,31 +235,12 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 					FileName: files[i].Distribution[j].Part,
 				})
 
-				newFileName := files[i].FileName
-				_, err = os.Create("./Downloads/" + newFileName)
-
-				if err != nil {
-					fmt.Println(err)
-					os.Exit(1)
-				}
-
-				file, err := os.OpenFile("./Downloads/"+newFileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-
-				if err != nil {
-					fmt.Println(err)
-					os.Exit(1)
-				}
-
-				_, writeError := file.Write(chunk.Chunk)
+				writeError := ioutil.WriteFile("./Downloads/"+newFileName, chunk.Chunk, 0644)
 
 				if writeError != nil {
-					fmt.Println(err)
-					os.Exit(1)
+					fmt.Println("error al crear archivo")
 				}
 
-				file.Sync()
-
-				file.Close()
 				if connectionError != nil {
 					fmt.Println("Hubo un error al descargar el archivo.")
 					return false
