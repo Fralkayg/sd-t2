@@ -217,7 +217,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 	for i := 0; i < len(files); i++ {
 		if files[i].FileIndex == int32(option) {
 			newFileName := files[i].FileName
-			_, err = os.Create("./Downloads/" + newFileName)
+			_, err := os.Create("./Downloads/" + newFileName)
 
 			if err != nil {
 				fmt.Println(err)
