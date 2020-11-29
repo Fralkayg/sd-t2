@@ -269,6 +269,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 		}
 	}
 	fmt.Println(option)
+	return true
 }
 
 func centralizedOrDistributed() {
