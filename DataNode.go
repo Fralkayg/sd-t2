@@ -101,6 +101,8 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 
 			generateDistribution(s, availableNodes, s.file.totalParts, firstNodeStatus, secondNodeStatus, thirdNodeStatus)
 
+			s.file = File{}
+
 		}
 	} else {
 		fmt.Println("no llega bien aqui")
@@ -114,8 +116,6 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 		chunk.Chunk = in.Chunk
 		s.file.chunks = append(s.file.chunks, chunk)
 	}
-
-	s.file = File{}
 
 	return &pb.ChunkStatus{Status: "Parte " + strconv.Itoa(int(in.ChunkIndex)) + " OK"}, nil
 }
