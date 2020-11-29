@@ -170,7 +170,7 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 	distributionReply, err := c.SendDistribution(context.Background(), &pb2.DistributionRequest2{
 		FileName:   s.file.fileName,
 		TotalParts: int32(s.file.totalParts),
-		Machines: []*pb2.DistributionRequest_MachineInformation{
+		Machines: []*pb2.DistributionRequest2_MachineInformation{
 			{Address: "dist53:50051", Distribution: firstNodeDistribution, Status: firstNodeStatus},
 			{Address: "dist54:50051", Distribution: secondNodeDistribution, Status: secondNodeStatus},
 			{Address: "dist55:50051", Distribution: thirdNodeDistribution, Status: thirdNodeStatus},
@@ -321,6 +321,7 @@ func generateDistributedDistribution(s *server, availableNodes int32) (int32, in
 			availableNodes++
 		}
 	}
+	return firstNodeStatus, secondNodeStatus, thirdNodeStatus, availableNodes
 
 }
 
