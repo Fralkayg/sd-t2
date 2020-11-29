@@ -307,8 +307,6 @@ func connectToDataNode() string {
 		} else if i == 55 && status == 1 {
 			fmt.Println("DataNode 55 en línea")
 			return address
-		} else {
-			return ""
 		}
 	}
 	return ""
