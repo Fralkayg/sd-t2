@@ -103,6 +103,9 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 
 		}
 	} else {
+		fmt.Println("no llega bien aqui")
+		fmt.Println(in.FileName)
+		fmt.Println(in.TotalParts)
 		s.file.fileName = in.FileName
 		s.file.totalParts = int(in.TotalParts)
 
