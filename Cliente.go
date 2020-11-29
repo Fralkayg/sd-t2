@@ -210,7 +210,7 @@ func downloadBookMenu() {
 	for validOption {
 		fmt.Println("Escoja un archivo a descargar:")
 		fmt.Scanln(&option)
-		if option > 0 || option <= len(logReply.Files) {
+		if option > 0 && option <= len(logReply.Files) {
 			validOption = false
 		}
 	}
