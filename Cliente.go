@@ -245,6 +245,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 				newFileChunk, err := os.Open("./Downloads/" + newFileName)
 
 				if err != nil {
+					fmt.Println("Error al abrir")
 					fmt.Println(err)
 					os.Exit(1)
 				}
@@ -254,6 +255,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 				_, writeError := newFileChunk.Write(chunk.Chunk)
 
 				if writeError != nil {
+					fmt.Println("Error al escribir")
 					fmt.Println(err)
 					os.Exit(1)
 				}
