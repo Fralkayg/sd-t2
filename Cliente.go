@@ -197,6 +197,8 @@ func downloadBook() {
 	if er != nil {
 		fmt.Println("Error al leer el archivo LOG")
 	}
+	fmt.Println("Cantidad archivos")
+	fmt.Println(len(logReply.Files))
 
 	for i := 0; i < len(logReply.Files); i++ {
 		fmt.Println("Nombre archivo: " + logReply.Files[i].FileName)
