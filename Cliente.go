@@ -235,16 +235,33 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 					FileName: files[i].Distribution[j].Part,
 				})
 
-				writeError := ioutil.WriteFile("./Downloads/"+newFileName, chunk.Chunk, 0644)
-
-				if writeError != nil {
-					fmt.Println("error al crear archivo")
-				}
-
 				if connectionError != nil {
-					fmt.Println("Hubo un error al descargar el archivo.")
+					fmt.Println("No se puede descargar el archivo.")
 					return false
 				}
+
+				//read a chunk
+
+				newFileChunk, err := os.Open("./Downloads/" + newFileName)
+
+				if err != nil {
+					fmt.Println(err)
+					os.Exit(1)
+				}
+
+				defer newFileChunk.Close()
+
+				n, writeError := file.Write(chunk.Chunk)
+
+				if writeError != nil {
+					fmt.Println(err)
+					os.Exit(1)
+				}
+
+				file.Sync()
+
+				file.Close()
+
 			}
 		}
 	}
