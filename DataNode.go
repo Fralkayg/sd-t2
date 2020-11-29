@@ -326,6 +326,7 @@ func generateDistributedDistribution(s *server, availableNodes int32) (int32, in
 
 		}
 	}
+	fmt.Println("Nodos disponibles: ", strconv.Itoa(int(availableNodes)))
 	return firstNodeStatus, secondNodeStatus, thirdNodeStatus, availableNodes
 
 }
