@@ -311,16 +311,19 @@ func generateDistributedDistribution(s *server, availableNodes int32) (int32, in
 			fmt.Println("Estado de dist" + strconv.Itoa(i) + ": ")
 			fmt.Println(status)
 		} else {
+			fmt.Println("Estado de dist" + strconv.Itoa(i) + ": ")
 			if i == 53 {
+				fmt.Println(firstNodeStatus)
 				firstNodeStatus = 1
 			} else if i == 54 {
+				fmt.Println(firstNodeStatus)
 				secondNodeStatus = 1
 			} else if i == 55 {
+				fmt.Println(firstNodeStatus)
 				thirdNodeStatus = 1
 			}
 			availableNodes++
-			fmt.Println("Estado de dist" + strconv.Itoa(i) + ": ")
-			fmt.Println(status)
+
 		}
 	}
 	return firstNodeStatus, secondNodeStatus, thirdNodeStatus, availableNodes
