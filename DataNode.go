@@ -398,6 +398,10 @@ func generateCentralizedDistribution(s *server) {
 
 	c := pb2.NewDataToNameServiceClient(conn)
 
+	fmt.Println("Datos a enviar a NameNode")
+	fmt.Println(s.file.fileName)
+	fmt.Println(s.file.totalParts)
+
 	distributionReply, err := c.SendDistributionProposal(context.Background(), &pb2.DistributionRequest{
 		FileName:   s.file.fileName,
 		TotalParts: int32(s.file.totalParts),

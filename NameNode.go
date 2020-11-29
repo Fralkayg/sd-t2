@@ -38,7 +38,6 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 					fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[0].Distribution[j]))
 					writeToLogFile(file, fileName+" "+in.Machines[0].Address+"\n")
 				}
-
 			}
 		}
 
