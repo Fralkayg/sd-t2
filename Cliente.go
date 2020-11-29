@@ -184,7 +184,7 @@ func uploadBook(option int) {
 	}
 }
 
-func downloadBook() {
+func downloadBookMenu() {
 	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -197,17 +197,28 @@ func downloadBook() {
 	if er != nil {
 		fmt.Println("Error al leer el archivo LOG")
 	}
-	fmt.Println("Cantidad archivos")
-	fmt.Println(len(logReply.Files))
 
 	for i := 0; i < len(logReply.Files); i++ {
-		fmt.Println("Nombre archivo: " + logReply.Files[i].FileName)
-		for j := 0; j < len(logReply.Files[i].Distribution); j++ {
-			fmt.Println("Distribucion de archivo")
-			fmt.Println(logReply.Files[i].Distribution[j].Part + " " + logReply.Files[i].Distribution[j].Address)
+		fmt.Println(strconv.Itoa(int(i)) + ":" + logReply.Files[i].FileName)
+		// for j := 0; j < len(logReply.Files[i].Distribution); j++ {
+		// 	fmt.Println("Distribucion de archivo")
+		// 	fmt.Println(logReply.Files[i].Distribution[j].Part + " " + logReply.Files[i].Distribution[j].Address)
+		// }
+	}
+	validOption := true
+	var option int
+	for validOption {
+		fmt.Println("Escoja un archivo a descargar:")
+		fmt.Scanln(&option)
+		if option > 0 || option <= len(logReply.Files) {
+			validOption = false
 		}
 	}
+	downloadBook(option)
+}
 
+func downloadBook(option int) {
+	fmt.Println(option)
 }
 
 func centralizedOrDistributed() {
@@ -295,7 +306,7 @@ func main() {
 		case 1:
 			centralizedOrDistributed()
 		case 2:
-			downloadBook()
+			downloadBookMenu()
 		case 3:
 			fmt.Println("Adiós!")
 			validOption = false
