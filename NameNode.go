@@ -35,8 +35,6 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 
 	scanner := bufio.NewScanner(f)
 
-	var logReply pb2.LogReply
-
 	var fileInformation []*pb2.LogReply_FileInfo
 
 	j := int32(0)
