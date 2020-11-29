@@ -37,23 +37,23 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 
 	logReply := &pb2.LogReply{}
 
-	fileInformation := &pb2.LogReply_FileInfo{}
+	var fileInformation []pb2.LogReply_FileInfo
 
 	j := int32(0)
 
 	for scanner.Scan() {
-		aux := &pb2.LogReply_FileInfo{}
+		var aux pb2.LogReply_FileInfo
 		line := strings.Split(scanner.Text(), " ")
 
 		totalParts, _ := strconv.Atoi(line[1])
 
 		aux.FileName = line[0]
-		aux.TotalParts = totalParts
+		aux.TotalParts = line[1]
 
-		fileDistribution := &pb2.LogReply_FileInfo_FileDistribution{}
+		var fileDistribution []pb2.LogReply_FileInfo_FileDistribution
 
 		for i := 0; i < totalParts; i++ {
-			aux2 := &pb2.LogReply_FileInfo_FileDistribution{}
+			var aux2 pb2.LogReply_FileInfo_FileDistribution
 			scanner.Scan()
 			filePart := strings.Split(scanner.Text(), " ")
 
