@@ -158,9 +158,9 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 			if firstNodeStatus == 1 {
 				firstNodeDistribution = append(firstNodeDistribution, int32(i))
 			} else if secondNodeStatus == 1 {
-				secondNodeDistribution = append(firstNodeDistribution, int32(i))
+				secondNodeDistribution = append(secondNodeDistribution, int32(i))
 			} else {
-				thirdNodeDistribution = append(firstNodeDistribution, int32(i))
+				thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
 			}
 		}
 	}
