@@ -35,8 +35,8 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 		if in.Machines[0].Status == 1 {
 			for j := 0; j < len(in.Machines[0].Distribution); j++ {
 				if in.Machines[0].Distribution[j] == int32(i) {
-					fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[0].Distribution[j])) + "\n"
-					writeToLogFile(file, fileName+" "+in.Machines[0].Address)
+					fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[0].Distribution[j]))
+					writeToLogFile(file, fileName+" "+in.Machines[0].Address+"\n")
 				}
 
 			}
@@ -45,8 +45,8 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 		if in.Machines[1].Status == 1 {
 			for j := 0; j < len(in.Machines[1].Distribution); j++ {
 				if in.Machines[1].Distribution[j] == int32(i) {
-					fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[1].Distribution[j])) + "\n"
-					writeToLogFile(file, fileName+" "+in.Machines[1].Address)
+					fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[1].Distribution[j]))
+					writeToLogFile(file, fileName+" "+in.Machines[1].Address+"\n")
 				}
 
 			}
@@ -55,8 +55,8 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 		if in.Machines[2].Status == 1 {
 			for j := 0; j < len(in.Machines[2].Distribution); j++ {
 				if in.Machines[2].Distribution[j] == int32(i) {
-					fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[2].Distribution[j])) + "\n"
-					writeToLogFile(file, fileName+" "+in.Machines[2].Address)
+					fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[2].Distribution[j]))
+					writeToLogFile(file, fileName+" "+in.Machines[2].Address+"\n")
 				}
 
 			}
