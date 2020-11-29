@@ -83,7 +83,7 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 			availableNodes := int32(3)
 
 			for notValid {
-				first, second, third, nodes := generateDistributedDistribution(s, availableNodes)
+				first, second, third, nodes := generateDistributedDistribution(s)
 				if nodes == availableNodes {
 					notValid = false
 				} else {
@@ -287,10 +287,11 @@ func makeLocalDistribution(address1 string, address2 string, result int32, i int
 	return firstNodeDistribution, first, secondNodeDistribution, second
 }
 
-func generateDistributedDistribution(s *server, availableNodes int32) (int32, int32, int32, int32) {
+func generateDistributedDistribution(s *server) (int32, int32, int32, int32) {
 	firstNodeStatus := int32(0)
 	secondNodeStatus := int32(0)
 	thirdNodeStatus := int32(0)
+	availableNodes := int32(0)
 
 	//Chequear Propuesta
 	for i := 53; i < 56; i++ {
