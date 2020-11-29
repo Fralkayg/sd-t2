@@ -73,22 +73,28 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 
 		if in.Option == 1 {
 			generateCentralizedDistribution(s)
-
-			// for i := 0; i < s.file.totalParts; i++ {
-			// 	fileName := s.file.fileName + "_" + strconv.Itoa(int(s.file.chunks[i].ChunkIndex))
-			// 	_, err := os.Create("Chunks/" + fileName)
-
-			// 	if err != nil {
-			// 		os.Exit(1)
-			// 	}
-
-			// 	ioutil.WriteFile("Chunks/"+fileName, s.file.chunks[i].Chunk, os.ModeAppend)
-
-			// }
-
 		} else {
-			//Distribuido
-			fmt.Println("Generar distribucion distribuida")
+			notValid := true
+			firstNodeStatus := int32(0)
+			secondNodeStatus := int32(0)
+			thirdNodeStatus := int32(0)
+
+			//Propuesta inicial asume 3 nodos
+			availableNodes := int32(3)
+
+			for notValid {
+				first, second, third, nodes := generateDistributedDistribution(s, availableNodes)
+				if nodes == availableNodes {
+					notValid = false
+				} else {
+					firstNodeStatus = first
+					secondNodeStatus = second
+					thirdNodeStatus = third
+					availableNodes = nodes
+				}
+			}
+			generateDistribution(s, availableNodes, s.file.totalParts, firstNodeStatus, secondNodeStatus, thirdNodeStatus)
+
 		}
 	} else {
 		s.file.fileName = in.FileName
@@ -101,6 +107,238 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 	}
 
 	return &pb.ChunkStatus{Status: "Parte " + strconv.Itoa(int(in.ChunkIndex)) + " OK"}, nil
+}
+
+func generateDistribution(s *server, availableNodes int32, totalParts int, firstNodeStatus int32, secondNodeStatus int32, thirdNodeStatus int32) {
+	var firstNodeDistribution []int32
+	var secondNodeDistribution []int32
+	var thirdNodeDistribution []int32
+	for i := 0; i < totalParts; i++ {
+		var result int32
+		if availableNodes == 3 {
+			result = int32(i % 3)
+			if result == 0 && firstNodeStatus == 1 {
+				firstNodeDistribution = append(firstNodeDistribution, int32(i))
+			} else if result == 1 && secondNodeStatus == 1 {
+				secondNodeDistribution = append(secondNodeDistribution, int32(i))
+			} else if thirdNodeStatus == 1 {
+				thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
+			}
+		} else if availableNodes == 2 {
+			result = int32(i % 2)
+			if firstNodeStatus == 1 && secondNodeStatus == 1 {
+				firstDistribution, first, secondDistribution, _ := makeLocalDistribution("dist53:50051", "dist54:50051", result, i)
+				if first {
+					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
+				} else {
+					secondNodeDistribution = append(secondNodeDistribution, secondDistribution)
+				}
+			} else if firstNodeStatus == 1 && thirdNodeStatus == 1 {
+				firstDistribution, first, secondDistribution, _ := makeLocalDistribution("dist53:50051", "dist55:50051", result, i)
+				if first {
+					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
+				} else {
+					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+				}
+			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
+				firstDistribution, first, secondDistribution, _ := makeLocalDistribution("dist54:50051", "dist55:50051", result, i)
+				if first {
+					secondNodeDistribution = append(firstNodeDistribution, firstDistribution)
+				} else {
+					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+				}
+			}
+		} else {
+			if firstNodeStatus == 1 {
+				firstNodeDistribution = append(firstNodeDistribution, int32(i))
+			} else if secondNodeStatus == 1 {
+				secondNodeDistribution = append(firstNodeDistribution, int32(i))
+			} else {
+				thirdNodeDistribution = append(firstNodeDistribution, int32(i))
+			}
+		}
+	}
+
+	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := pb2.NewDataToNameServiceClient(conn)
+
+	distributionReply, err := c.SendDistribution(context.Background(), &pb2.DistributionRequest{
+		FileName:   s.file.fileName,
+		TotalParts: int32(s.file.totalParts),
+		Machines: []*pb2.DistributionRequest_MachineInformation{
+			{Address: "dist53:50051", Distribution: firstNodeDistribution, Status: firstNodeStatus},
+			{Address: "dist54:50051", Distribution: secondNodeDistribution, Status: secondNodeStatus},
+			{Address: "dist55:50051", Distribution: thirdNodeDistribution, Status: thirdNodeStatus},
+		},
+	})
+
+	if distributionReply.Machines[0].Status == 1 {
+		for j := 0; j < len(distributionReply.Machines[0].Distribution); j++ {
+			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex))
+			chunk := s.file.chunks[distributionReply.Machines[0].Distribution[j]].Chunk
+			if distributionReply.Machines[0].Address == s.currentAddress {
+				_, err := os.Create("Chunks/" + fileName)
+
+				if err != nil {
+					os.Exit(1)
+				}
+
+				ioutil.WriteFile("Chunks/"+fileName, chunk, os.ModeAppend)
+			} else {
+				conn, err := grpc.Dial(distributionReply.Machines[0].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+
+				response, _ := c.SaveChunk(context.Background(), &pb.StoreChunkRequest{
+					FileName: fileName,
+					Chunk:    chunk,
+				})
+
+				fmt.Println("Mensaje: ", response.Status)
+			}
+		}
+	}
+	if distributionReply.Machines[1].Status == 1 {
+		for j := 0; j < len(distributionReply.Machines[1].Distribution); j++ {
+			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex))
+			chunk := s.file.chunks[distributionReply.Machines[1].Distribution[j]].Chunk
+			if distributionReply.Machines[1].Address == s.currentAddress {
+
+				_, err := os.Create("Chunks/" + fileName)
+
+				if err != nil {
+					os.Exit(1)
+				}
+
+				ioutil.WriteFile("Chunks/"+fileName, chunk, os.ModeAppend)
+			} else {
+				conn, err := grpc.Dial(distributionReply.Machines[1].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+
+				response, _ := c.SaveChunk(context.Background(), &pb.StoreChunkRequest{
+					FileName: fileName,
+					Chunk:    chunk,
+				})
+
+				fmt.Println("Mensaje: ", response.Status)
+			}
+		}
+	}
+	if distributionReply.Machines[2].Status == 1 {
+		for j := 0; j < len(distributionReply.Machines[2].Distribution); j++ {
+			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex))
+			chunk := s.file.chunks[distributionReply.Machines[2].Distribution[j]].Chunk
+			if distributionReply.Machines[2].Address == s.currentAddress {
+				_, err := os.Create("Chunks/" + fileName)
+
+				if err != nil {
+					os.Exit(1)
+				}
+
+				ioutil.WriteFile("Chunks/"+fileName, chunk, os.ModeAppend)
+			} else {
+				conn, err := grpc.Dial(distributionReply.Machines[2].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+
+				response, _ := c.SaveChunk(context.Background(), &pb.StoreChunkRequest{
+					FileName: fileName,
+					Chunk:    chunk,
+				})
+
+				fmt.Println("Mensaje: ", response.Status)
+
+			}
+		}
+	}
+
+}
+
+func makeLocalDistribution(address1 string, address2 string, result int32, i int) (int32, bool, int32, bool) {
+	var firstNodeDistribution int32
+	var secondNodeDistribution int32
+	first := false
+	second := false
+	if result == 0 {
+		firstNodeDistribution = int32(i)
+		first = true
+	} else if result == 1 {
+		secondNodeDistribution = int32(i)
+		second = true
+	}
+	return firstNodeDistribution, first, secondNodeDistribution, second
+}
+
+func generateDistributedDistribution(s *server, availableNodes int32) (int32, int32, int32, int32) {
+	firstNodeStatus := int32(0)
+	secondNodeStatus := int32(0)
+	thirdNodeStatus := int32(0)
+
+	//Chequear Propuesta
+	for i := 53; i < 56; i++ {
+		address := "dist" + strconv.Itoa(i) + port
+		if address != s.currentAddress {
+			status := checkNodeStatus(address)
+			if i == 53 {
+				firstNodeStatus = status
+			} else if i == 54 {
+				secondNodeStatus = status
+			} else {
+				thirdNodeStatus = status
+			}
+			if status == 1 {
+				availableNodes++
+			}
+
+			fmt.Println("Estado de dist" + strconv.Itoa(i) + ": ")
+			fmt.Println(status)
+		} else {
+			if i == 53 {
+				firstNodeStatus = 1
+			} else if i == 54 {
+				secondNodeStatus = 1
+			} else if i == 55 {
+				thirdNodeStatus = 1
+			}
+			availableNodes++
+		}
+	}
+
+}
+
+func checkNodeStatus(address string) int32 {
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer conn.Close()
+
+	c := pb.NewFileManagementServiceClient(conn)
+
+	_, connectionError := c.CheckNodeStatus(context.Background(), &pb.StatusRequest{Online: true})
+	if connectionError != nil {
+		return 0
+	}
+	return 1
 }
 
 func generateCentralizedDistribution(s *server) {
@@ -144,12 +382,7 @@ func generateCentralizedDistribution(s *server) {
 	fmt.Println(distributionReply.Machines[2].Status)
 
 	if distributionReply.Machines[0].Status == 1 {
-		fmt.Println(len(distributionReply.Machines[0].Distribution))
 		for j := 0; j < len(distributionReply.Machines[0].Distribution); j++ {
-			//Crear chunk
-			fmt.Println("Maquina: " + distributionReply.Machines[0].Address)
-			// Chunk: []byte = s.file.chunks[distributionReply.Machines[0].Distribution[i]].Chunk)
-			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex)))
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[0].Distribution[j]].Chunk
 			if distributionReply.Machines[0].Address == s.currentAddress {
@@ -179,12 +412,7 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 	if distributionReply.Machines[1].Status == 1 {
-		fmt.Println(len(distributionReply.Machines[1].Distribution))
 		for j := 0; j < len(distributionReply.Machines[1].Distribution); j++ {
-			//Crear chunk
-			fmt.Println("Maquina: " + distributionReply.Machines[1].Address)
-			// Chunk: []byte = s.file.chunks[distributionReply.Machines[1].Distribution[i]].Chunk)
-			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex)))
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[1].Distribution[j]].Chunk
 			if distributionReply.Machines[1].Address == s.currentAddress {
@@ -215,12 +443,7 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 	if distributionReply.Machines[2].Status == 1 {
-		fmt.Println(len(distributionReply.Machines[2].Distribution))
 		for j := 0; j < len(distributionReply.Machines[2].Distribution); j++ {
-			//Crear chunk
-			fmt.Println("Maquina: " + distributionReply.Machines[2].Address)
-			// Chunk: []byte = s.file.chunks[distributionReply.Machines[2].Distribution[i]].Chunk)
-			fmt.Println("Chunk index: " + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex)))
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[2].Distribution[j]].Chunk
 			if distributionReply.Machines[2].Address == s.currentAddress {
@@ -250,8 +473,6 @@ func generateCentralizedDistribution(s *server) {
 			}
 		}
 	}
-
-	// saveChunks(s, distributionReply)
 
 	if err != nil {
 		fmt.Println(err)

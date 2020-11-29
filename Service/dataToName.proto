@@ -3,6 +3,7 @@ package dataToName;
 
 service DataToNameService{
     rpc SendDistributionProposal(DistributionRequest) returns (DistributionReply){}
+    rpc SendDistribution(DistributionRequest) returns (DistributionReply){}
 }
 
 message DistributionRequest{

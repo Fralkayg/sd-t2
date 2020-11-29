@@ -22,6 +22,50 @@ const (
 	port = ":50051"
 )
 
+func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest) (*pb2.DistributionReply, error) {
+	file, err := os.OpenFile("./LOG.txt", os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		log.Println(err)
+	}
+	if _, err := file.WriteString(in.FileName + " " + strconv.Itoa(int(in.TotalParts)) + "\n"); err != nil {
+		log.Fatal(err)
+	}
+
+	if in.Machines[0].Status == 1 {
+		for j := 0; j < len(in.Machines[0].Distribution); j++ {
+			fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[0].Distribution[j]))
+			writeToLogFile(file, fileName+" "+in.Machines[0].Address)
+		}
+	}
+
+	if in.Machines[1].Status == 1 {
+		for j := 0; j < len(in.Machines[1].Distribution); j++ {
+			fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[1].Distribution[j]))
+			writeToLogFile(file, fileName+" "+in.Machines[1].Address)
+		}
+	}
+
+	if in.Machines[2].Status == 1 {
+		for j := 0; j < len(in.Machines[2].Distribution); j++ {
+			fileName := in.FileName + "_" + strconv.Itoa(int(in.Machines[2].Distribution[j]))
+			writeToLogFile(file, fileName+" "+in.Machines[2].Address)
+		}
+	}
+
+	file.Close()
+
+	return &pb2.DistributionReply{
+		FileName:   in.FileName,
+		TotalParts: int32(in.TotalParts),
+		Machines: []*pb2.DistributionReply_MachineInformation{
+			{Address: "dist53:50051", Distribution: in.Machines[0].Distribution, Status: in.Machines[0].Status},
+			{Address: "dist54:50051", Distribution: in.Machines[1].Distribution, Status: in.Machines[1].Status},
+			{Address: "dist55:50051", Distribution: in.Machines[2].Distribution, Status: in.Machines[2].Status},
+		},
+	}, nil
+
+}
+
 func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.DistributionRequest) (*pb2.DistributionReply, error) {
 	var firstNodeDistribution []int32
 	var secondNodeDistribution []int32
