@@ -93,6 +93,12 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 					availableNodes = nodes
 				}
 			}
+			fmt.Println("Salio del ciclo. Estados:")
+			fmt.Println("Nodos: " + strconv.Itoa(int(availableNodes)))
+			fmt.Println(firstNodeStatus)
+			fmt.Println(secondNodeStatus)
+			fmt.Println(thirdNodeStatus)
+
 			generateDistribution(s, availableNodes, s.file.totalParts, firstNodeStatus, secondNodeStatus, thirdNodeStatus)
 
 		}
