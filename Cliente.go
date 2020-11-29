@@ -223,6 +223,14 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 				fmt.Println(err)
 				os.Exit(1)
 			}
+
+			file, openFileError := os.OpenFile("./Downloads/"+newFileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+
+			if openFileError != nil {
+				fmt.Println("Error al abrir el archivo")
+				fmt.Println(err)
+				os.Exit(1)
+			}
 			for j := 0; j < len(files[i].Distribution); j++ {
 				conn, err := grpc.Dial(files[i].Distribution[j].Address, grpc.WithInsecure())
 				if err != nil {
@@ -239,32 +247,17 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 					fmt.Println("No se puede descargar el archivo.")
 					return false
 				}
-
-				//read a chunk
-
-				newFileChunk, err := os.Open("./Downloads/" + newFileName)
-
-				if err != nil {
-					fmt.Println("Error al abrir")
-					fmt.Println(err)
-					os.Exit(1)
-				}
-
-				defer newFileChunk.Close()
-
-				_, writeError := newFileChunk.Write(chunk.Chunk)
+				_, writeError := file.Write(chunk.Chunk)
 
 				if writeError != nil {
-					fmt.Println("Error al escribir")
 					fmt.Println(err)
 					os.Exit(1)
 				}
 
-				newFileChunk.Sync()
-
-				newFileChunk.Close()
+				file.Sync()
 
 			}
+			file.Close()
 		}
 	}
 	fmt.Println(option)
