@@ -204,14 +204,14 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 				if first {
 					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
 				} else {
-					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+					thirdNodeDistribution = append(thirdNodeDistribution, secondDistribution)
 				}
 			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
 				firstDistribution, first, secondDistribution, _ := makeDistribution(file, in.FileName, "dist54:50051", "dist55:50051", result, i)
 				if first {
-					secondNodeDistribution = append(firstNodeDistribution, firstDistribution)
+					secondNodeDistribution = append(secondNodeDistribution, firstDistribution)
 				} else {
-					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+					thirdNodeDistribution = append(thirdNodeDistribution, secondDistribution)
 				}
 			}
 		} else {

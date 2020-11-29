@@ -162,14 +162,14 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 				if first {
 					firstNodeDistribution = append(firstNodeDistribution, firstDistribution)
 				} else {
-					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+					thirdNodeDistribution = append(thirdNodeDistribution, secondDistribution)
 				}
 			} else if secondNodeStatus == 1 && thirdNodeStatus == 1 {
 				firstDistribution, first, secondDistribution, _ := makeLocalDistribution("dist54:50051", "dist55:50051", result, i)
 				if first {
-					secondNodeDistribution = append(firstNodeDistribution, firstDistribution)
+					secondNodeDistribution = append(secondNodeDistribution, firstDistribution)
 				} else {
-					thirdNodeDistribution = append(secondNodeDistribution, secondDistribution)
+					thirdNodeDistribution = append(thirdNodeDistribution, secondDistribution)
 				}
 			}
 		} else {
@@ -354,10 +354,10 @@ func generateDistributedDistribution(s *server) (int32, int32, int32, int32) {
 				fmt.Println(firstNodeStatus)
 				firstNodeStatus = 1
 			} else if i == 54 {
-				fmt.Println(firstNodeStatus)
+				fmt.Println(secondNodeStatus)
 				secondNodeStatus = 1
 			} else if i == 55 {
-				fmt.Println(firstNodeStatus)
+				fmt.Println(thirdNodeStatus)
 				thirdNodeStatus = 1
 			}
 			availableNodes++
