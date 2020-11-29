@@ -143,19 +143,18 @@ func uploadBook(option int) {
 			fmt.Println("Opción invalida. Reingresar")
 		} else {
 			chunkedFile := splitFile(files[bookIndex-1])
+			conn, address := connectToDataNode()
 
-			for i := 0; i < chunkedFile.TotalParts; i++ {
-				var lastChunk bool
+			if conn != nil {
+				for i := 0; i < chunkedFile.TotalParts; i++ {
+					var lastChunk bool
 
-				if i == chunkedFile.TotalParts-1 {
-					lastChunk = true
-				} else {
-					lastChunk = false
-				}
+					if i == chunkedFile.TotalParts-1 {
+						lastChunk = true
+					} else {
+						lastChunk = false
+					}
 
-				conn, address := connectToDataNode()
-
-				if conn != nil {
 					chunk := obtainChunk(chunkedFile.ChunkName[i])
 
 					c := pb.NewFileManagementServiceClient(conn)
@@ -169,14 +168,10 @@ func uploadBook(option int) {
 						TotalParts: int32(chunkedFile.TotalParts),
 						Address:    address,
 					})
-
 					fmt.Println(status)
-
-				} else {
-					//do nothing
 				}
-
 			}
+
 			validOption = false
 		}
 
