@@ -50,8 +50,6 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		aux.FileName = line[0]
 		aux.TotalParts = line[1]
 
-		var fileDistribution []pb2.LogReply_FileInfo_FileDistribution
-
 		for i := 0; i < totalParts; i++ {
 			var aux2 pb2.LogReply_FileInfo_FileDistribution
 			scanner.Scan()
