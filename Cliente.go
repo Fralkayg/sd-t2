@@ -245,6 +245,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 
 				if connectionError != nil {
 					fmt.Println("No se puede descargar el archivo.")
+					os.Remove("./Downloads/" + newFileName)
 					return false
 				}
 				_, writeError := file.Write(chunk.Chunk)
