@@ -27,6 +27,10 @@ type ChunkedFile struct {
 	ChunkName  []string
 }
 
+type ChunkDownloaded struct {
+	chunkInfo []byte
+}
+
 func helloWorld(conn *grpc.ClientConn) {
 	c := pb.NewFileManagementServiceClient(conn)
 
@@ -216,6 +220,30 @@ func downloadBookMenu() {
 func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 	for i := 0; i < len(files); i++ {
 		if files[i].FileIndex == int32(option) {
+			var chunks []ChunkDownloaded
+			for j := 0; j < len(files[i].Distribution); j++ {
+				conn, err := grpc.Dial(files[i].Distribution[j].Address, grpc.WithInsecure())
+				if err != nil {
+					log.Fatalf("did not connect: %v", err)
+				}
+				defer conn.Close()
+
+				c := pb.NewFileManagementServiceClient(conn)
+				chunk, connectionError := c.RetrieveChunk(context.Background(), &pb.ChunkRequest{
+					FileName: files[i].Distribution[j].Part,
+				})
+
+				if connectionError != nil {
+					fmt.Println("No se puede descargar el archivo.")
+					// os.Remove("./Downloads/" + newFileName)
+					return false
+				}
+				var newChunk ChunkDownloaded
+				newChunk.chunkInfo = chunk.Chunk
+
+				chunks = append(chunks, newChunk)
+			}
+
 			newFileName := files[i].FileName
 			_, err := os.Create("./Downloads/" + newFileName)
 
@@ -231,24 +259,9 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 				fmt.Println(err)
 				os.Exit(1)
 			}
-			for j := 0; j < len(files[i].Distribution); j++ {
-				conn, err := grpc.Dial(files[i].Distribution[j].Address, grpc.WithInsecure())
-				if err != nil {
-					log.Fatalf("did not connect: %v", err)
-				}
-				defer conn.Close()
 
-				c := pb.NewFileManagementServiceClient(conn)
-				chunk, connectionError := c.RetrieveChunk(context.Background(), &pb.ChunkRequest{
-					FileName: files[i].Distribution[j].Part,
-				})
-
-				if connectionError != nil {
-					fmt.Println("No se puede descargar el archivo.")
-					os.Remove("./Downloads/" + newFileName)
-					return false
-				}
-				_, writeError := file.Write(chunk.Chunk)
+			for k := 0; k < len(chunks); k++ {
+				_, writeError := file.Write(chunks[k].chunkInfo)
 
 				if writeError != nil {
 					fmt.Println(err)
@@ -256,9 +269,10 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 				}
 
 				file.Sync()
-
 			}
+
 			file.Close()
+			return true
 		}
 	}
 	fmt.Println(option)
