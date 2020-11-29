@@ -496,6 +496,7 @@ func generateCentralizedDistribution(s *server) {
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[2].Distribution[j]].Chunk
 			if distributionReply.Machines[2].Address == s.currentAddress {
+				fmt.Println("Creando archivos local")
 				_, err := os.Create("Chunks/" + fileName)
 
 				if err != nil {
