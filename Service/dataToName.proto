@@ -3,6 +3,11 @@ package dataToName;
 
 service DataToNameService{
     rpc SendDistributionProposal(DistributionRequest) returns (DistributionReply){}
+
+    Addressda
+    DataToNameService
+
+    
     rpc SendDistribution(DistributionRequest2) returns (DistributionReply2){}
 }
 
