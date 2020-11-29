@@ -17,7 +17,7 @@ import (
 const (
 	address     = "dist54:50051"
 	defaultName = "world"
-	port        = "50051"
+	port        = ":50051"
 )
 
 type ChunkedFile struct {
