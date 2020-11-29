@@ -3,6 +3,35 @@ package dataToName;
 
 service DataToNameService{
     rpc SendDistributionProposal(DistributionRequest) returns (DistributionReply){}
+    rpc SendDistribution(DistributionRequest2) returns (DistributionReply2){}
+}
+
+message DistributionRequest2{
+    string FileName = 1;
+    int32 TotalParts = 2;
+    
+    message MachineInformation{
+        string Address = 1;
+        repeated int32 Distribution = 2;
+        int32 Status = 3;
+    }
+
+    repeated MachineInformation Machines = 3;
+
+}
+
+message DistributionReply2{
+    string FileName = 1;
+    int32 TotalParts = 2;
+    
+    message MachineInformation{
+        string Address = 1;
+        repeated int32 Distribution = 2;
+        int32 Status = 3;
+    }
+
+    repeated MachineInformation Machines = 3;
+
 }
 
 message DistributionRequest{
