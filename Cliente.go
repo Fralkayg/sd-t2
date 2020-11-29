@@ -243,23 +243,17 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 					os.Exit(1)
 				}
 
-				// var writePosition int64 = 0
+				_, err := file.Write(chunk.Chunk)
 
-				for k := uint64(0); k < uint64(len(files[i].Distribution)); k++ {
-
-					chunkBufferBytes := chunk.Chunk
-
-					_, err := file.Write(chunkBufferBytes)
-
-					if err != nil {
-						fmt.Println(err)
-						os.Exit(1)
-					}
-
-					file.Sync()
-
-					chunkBufferBytes = nil
+				if err != nil {
+					fmt.Println(err)
+					os.Exit(1)
 				}
+
+				file.Sync()
+
+				chunkBufferBytes = nil
+
 				file.Close()
 				if connectionError != nil {
 					fmt.Println("Hubo un error al descargar el archivo.")
