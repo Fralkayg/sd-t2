@@ -245,7 +245,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 
 				var writePosition int64 = 0
 
-				for j := uint64(0); j < len(files[i].Distribution); j++ {
+				for k := uint64(0); k < uint64(len(files[i].Distribution)); k++ {
 
 					chunkBufferBytes := chunk
 
