@@ -245,11 +245,11 @@ func checkStatus(address string) (*grpc.ClientConn, int32) {
 func main() {
 	var validOption bool
 	var option int
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
+	// conn, err := grpc.Dial(address, grpc.WithInsecure())
+	// if err != nil {
+	// 	log.Fatalf("did not connect: %v", err)
+	// }
+	// defer conn.Close()
 
 	validOption = true
 
