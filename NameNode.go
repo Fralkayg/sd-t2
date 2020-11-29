@@ -63,9 +63,12 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 			fileDistribution = append(fileDistribution, aux2)
 		}
 
+		aux.FileIndex = j
+
 		fileInformation = append(fileInformation, aux)
 
 		fmt.Println(scanner.Text())
+		j++
 	}
 
 	if err := scanner.Err(); err != nil {
