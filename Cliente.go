@@ -198,6 +198,10 @@ func downloadBook() {
 		fmt.Println("Error al leer el archivo LOG")
 	}
 
+	for i := 0; i < len(logReply.Files); i++ {
+		fmt.Println("Nombre archivo: " + logReply.Files[i].FileName)
+	}
+
 	fmt.Println(logReply)
 }
 
