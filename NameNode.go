@@ -48,9 +48,6 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		aux.FileName = line[0]
 		aux.TotalParts = line[1]
 
-		// fmt.Println(aux.FileName)
-		// fmt.Println(aux.TotalParts)
-
 		var fileDistribution []pb2.LogReply_FileInfo_FileDistribution
 
 		for i := 0; i < totalParts; i++ {
@@ -60,8 +57,6 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 
 			aux2.Part = filePart[0]
 			aux2.Address = filePart[1]
-			// fmt.Println(aux2.Part)
-			// fmt.Println(aux2.Address)
 
 			fileDistribution = append(fileDistribution, aux2)
 		}
@@ -69,22 +64,20 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		aux.FileIndex = j
 
 		files = append(files, aux)
-
-		// fmt.Println(scanner.Text())
 		j++
 	}
-
-	for i := 0; i < len(files); i++ {
-
-		fmt.Println(files[i].FileName)
-		fmt.Println(files[i].TotalParts)
-	}
-
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
 
-	return &pb2.LogReply{}, nil
+	var wea pb2.LogReply
+
+	for i := 0; i < len(files); i++ {
+		wea.Files = append(wea.Files, &files[i])
+	}
+
+	return &wea, nil
+	// return &pb2.LogReply{}, nil
 }
 
 func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest2) (*pb2.DistributionReply2, error) {
