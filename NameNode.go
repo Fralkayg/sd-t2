@@ -54,10 +54,10 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 
 	file.Close()
 
-	return &pb2.DistributionReply{
+	return &pb2.DistributionReply2{
 		FileName:   in.FileName,
 		TotalParts: int32(in.TotalParts),
-		Machines: []*pb2.DistributionReply_MachineInformation{
+		Machines: []*pb2.DistributionReply2_MachineInformation{
 			{Address: "dist53:50051", Distribution: in.Machines[0].Distribution, Status: in.Machines[0].Status},
 			{Address: "dist54:50051", Distribution: in.Machines[1].Distribution, Status: in.Machines[1].Status},
 			{Address: "dist55:50051", Distribution: in.Machines[2].Distribution, Status: in.Machines[2].Status},
