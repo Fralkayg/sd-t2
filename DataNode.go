@@ -173,6 +173,13 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 
 	c := pb2.NewDataToNameServiceClient(conn)
 
+	fmt.Println("Largo maquina 0: ")
+	fmt.Println(len(firstNodeDistribution))
+	fmt.Println("Largo maquina 1: ")
+	fmt.Println(len(secondNodeDistribution))
+	fmt.Println("Largo maquina 2: ")
+	fmt.Println(len(thirdNodeDistribution))
+
 	distributionReply, err := c.SendDistribution(context.Background(), &pb2.DistributionRequest2{
 		FileName:   s.file.fileName,
 		TotalParts: int32(s.file.totalParts),
