@@ -229,30 +229,28 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 				})
 
 				newFileName := files[i].FileName
-				_, err = os.Create(newFileName)
+				_, err = os.Create("./Downloads/" + newFileName)
 
 				if err != nil {
 					fmt.Println(err)
 					os.Exit(1)
 				}
 
-				file, err := os.OpenFile(newFileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+				file, err := os.OpenFile("./Downloads/"+newFileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 
 				if err != nil {
 					fmt.Println(err)
 					os.Exit(1)
 				}
 
-				_, err := file.Write(chunk.Chunk)
+				_, writeError := file.Write(chunk.Chunk)
 
-				if err != nil {
+				if writeError != nil {
 					fmt.Println(err)
 					os.Exit(1)
 				}
 
 				file.Sync()
-
-				chunkBufferBytes = nil
 
 				file.Close()
 				if connectionError != nil {
