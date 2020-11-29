@@ -220,10 +220,10 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist53:50051\n")
 
 			} else if secondNodeStatus == 1 {
-				secondNodeDistribution = append(firstNodeDistribution, int32(i))
+				secondNodeDistribution = append(secondNodeDistribution, int32(i))
 				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist54:50051\n")
 			} else {
-				thirdNodeDistribution = append(firstNodeDistribution, int32(i))
+				thirdNodeDistribution = append(thirdNodeDistribution, int32(i))
 				writeToLogFile(file, in.FileName+"_"+strconv.Itoa(int(i))+" "+"dist55:50051\n")
 			}
 		}
