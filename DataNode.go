@@ -167,7 +167,7 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 
 	c := pb2.NewDataToNameServiceClient(conn)
 
-	distributionReply, err := c.SendDistribution(context.Background(), &pb2.DistributionRequest{
+	distributionReply, err := c.SendDistribution(context.Background(), &pb2.DistributionRequest2{
 		FileName:   s.file.fileName,
 		TotalParts: int32(s.file.totalParts),
 		Machines: []*pb2.DistributionRequest_MachineInformation{

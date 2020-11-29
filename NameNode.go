@@ -22,7 +22,7 @@ const (
 	port = ":50051"
 )
 
-func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest) (*pb2.DistributionReply, error) {
+func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest2) (*pb2.DistributionReply2, error) {
 	file, err := os.OpenFile("./LOG.txt", os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
 		log.Println(err)
