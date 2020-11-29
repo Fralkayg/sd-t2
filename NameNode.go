@@ -35,12 +35,12 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 
 	scanner := bufio.NewScanner(f)
 
-	var files []*pb2.LogReply_FileInfo
+	var files []pb2.LogReply_FileInfo
 
 	j := int32(0)
 
 	for scanner.Scan() {
-		var aux *pb2.LogReply_FileInfo
+		var aux pb2.LogReply_FileInfo
 		line := strings.Split(scanner.Text(), " ")
 
 		totalParts, _ := strconv.Atoi(line[1])
@@ -51,10 +51,10 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		fmt.Println(aux.FileName)
 		fmt.Println(aux.TotalParts)
 
-		var fileDistribution []*pb2.LogReply_FileInfo_FileDistribution
+		var fileDistribution []pb2.LogReply_FileInfo_FileDistribution
 
 		for i := 0; i < totalParts; i++ {
-			var aux2 *pb2.LogReply_FileInfo_FileDistribution
+			var aux2 pb2.LogReply_FileInfo_FileDistribution
 			scanner.Scan()
 			filePart := strings.Split(scanner.Text(), " ")
 
@@ -77,7 +77,7 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		log.Fatal(err)
 	}
 
-	return &pb2.LogReply{Files: files}, nil
+	return &pb2.LogReply{}, nil
 }
 
 func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest2) (*pb2.DistributionReply2, error) {
