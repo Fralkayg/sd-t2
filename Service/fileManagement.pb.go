@@ -29,6 +29,100 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
+type ChunkRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FileName string `protobuf:"bytes,1,opt,name=FileName,proto3" json:"FileName,omitempty"`
+}
+
+func (x *ChunkRequest) Reset() {
+	*x = ChunkRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_fileManagement_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChunkRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChunkRequest) ProtoMessage() {}
+
+func (x *ChunkRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fileManagement_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChunkRequest.ProtoReflect.Descriptor instead.
+func (*ChunkRequest) Descriptor() ([]byte, []int) {
+	return file_fileManagement_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ChunkRequest) GetFileName() string {
+	if x != nil {
+		return x.FileName
+	}
+	return ""
+}
+
+type ChunkReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Chunk []byte `protobuf:"bytes,1,opt,name=Chunk,proto3" json:"Chunk,omitempty"`
+}
+
+func (x *ChunkReply) Reset() {
+	*x = ChunkReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_fileManagement_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChunkReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChunkReply) ProtoMessage() {}
+
+func (x *ChunkReply) ProtoReflect() protoreflect.Message {
+	mi := &file_fileManagement_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChunkReply.ProtoReflect.Descriptor instead.
+func (*ChunkReply) Descriptor() ([]byte, []int) {
+	return file_fileManagement_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ChunkReply) GetChunk() []byte {
+	if x != nil {
+		return x.Chunk
+	}
+	return nil
+}
+
 type StoreChunkRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -41,7 +135,7 @@ type StoreChunkRequest struct {
 func (x *StoreChunkRequest) Reset() {
 	*x = StoreChunkRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[0]
+		mi := &file_fileManagement_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -54,7 +148,7 @@ func (x *StoreChunkRequest) String() string {
 func (*StoreChunkRequest) ProtoMessage() {}
 
 func (x *StoreChunkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[0]
+	mi := &file_fileManagement_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -67,7 +161,7 @@ func (x *StoreChunkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StoreChunkRequest.ProtoReflect.Descriptor instead.
 func (*StoreChunkRequest) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{0}
+	return file_fileManagement_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *StoreChunkRequest) GetFileName() string {
@@ -95,7 +189,7 @@ type StoreChunkReply struct {
 func (x *StoreChunkReply) Reset() {
 	*x = StoreChunkReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[1]
+		mi := &file_fileManagement_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -108,7 +202,7 @@ func (x *StoreChunkReply) String() string {
 func (*StoreChunkReply) ProtoMessage() {}
 
 func (x *StoreChunkReply) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[1]
+	mi := &file_fileManagement_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -121,7 +215,7 @@ func (x *StoreChunkReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StoreChunkReply.ProtoReflect.Descriptor instead.
 func (*StoreChunkReply) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{1}
+	return file_fileManagement_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *StoreChunkReply) GetStatus() string {
@@ -142,7 +236,7 @@ type StatusRequest struct {
 func (x *StatusRequest) Reset() {
 	*x = StatusRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[2]
+		mi := &file_fileManagement_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -155,7 +249,7 @@ func (x *StatusRequest) String() string {
 func (*StatusRequest) ProtoMessage() {}
 
 func (x *StatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[2]
+	mi := &file_fileManagement_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +262,7 @@ func (x *StatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusRequest.ProtoReflect.Descriptor instead.
 func (*StatusRequest) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{2}
+	return file_fileManagement_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *StatusRequest) GetOnline() bool {
@@ -189,7 +283,7 @@ type StatusReply struct {
 func (x *StatusReply) Reset() {
 	*x = StatusReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[3]
+		mi := &file_fileManagement_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -202,7 +296,7 @@ func (x *StatusReply) String() string {
 func (*StatusReply) ProtoMessage() {}
 
 func (x *StatusReply) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[3]
+	mi := &file_fileManagement_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -215,7 +309,7 @@ func (x *StatusReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusReply.ProtoReflect.Descriptor instead.
 func (*StatusReply) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{3}
+	return file_fileManagement_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *StatusReply) GetOnline() bool {
@@ -242,7 +336,7 @@ type ChunkInformation struct {
 func (x *ChunkInformation) Reset() {
 	*x = ChunkInformation{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[4]
+		mi := &file_fileManagement_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -255,7 +349,7 @@ func (x *ChunkInformation) String() string {
 func (*ChunkInformation) ProtoMessage() {}
 
 func (x *ChunkInformation) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[4]
+	mi := &file_fileManagement_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -268,7 +362,7 @@ func (x *ChunkInformation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChunkInformation.ProtoReflect.Descriptor instead.
 func (*ChunkInformation) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{4}
+	return file_fileManagement_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ChunkInformation) GetChunk() []byte {
@@ -331,7 +425,7 @@ type ChunkStatus struct {
 func (x *ChunkStatus) Reset() {
 	*x = ChunkStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[5]
+		mi := &file_fileManagement_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -344,7 +438,7 @@ func (x *ChunkStatus) String() string {
 func (*ChunkStatus) ProtoMessage() {}
 
 func (x *ChunkStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[5]
+	mi := &file_fileManagement_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -357,7 +451,7 @@ func (x *ChunkStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChunkStatus.ProtoReflect.Descriptor instead.
 func (*ChunkStatus) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{5}
+	return file_fileManagement_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ChunkStatus) GetStatus() string {
@@ -378,7 +472,7 @@ type HelloRequest struct {
 func (x *HelloRequest) Reset() {
 	*x = HelloRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[6]
+		mi := &file_fileManagement_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -391,7 +485,7 @@ func (x *HelloRequest) String() string {
 func (*HelloRequest) ProtoMessage() {}
 
 func (x *HelloRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[6]
+	mi := &file_fileManagement_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -404,7 +498,7 @@ func (x *HelloRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HelloRequest.ProtoReflect.Descriptor instead.
 func (*HelloRequest) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{6}
+	return file_fileManagement_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *HelloRequest) GetMensaje() string {
@@ -425,7 +519,7 @@ type HelloReply struct {
 func (x *HelloReply) Reset() {
 	*x = HelloReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_fileManagement_proto_msgTypes[7]
+		mi := &file_fileManagement_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -438,7 +532,7 @@ func (x *HelloReply) String() string {
 func (*HelloReply) ProtoMessage() {}
 
 func (x *HelloReply) ProtoReflect() protoreflect.Message {
-	mi := &file_fileManagement_proto_msgTypes[7]
+	mi := &file_fileManagement_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -451,7 +545,7 @@ func (x *HelloReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HelloReply.ProtoReflect.Descriptor instead.
 func (*HelloReply) Descriptor() ([]byte, []int) {
-	return file_fileManagement_proto_rawDescGZIP(), []int{7}
+	return file_fileManagement_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *HelloReply) GetMensaje() string {
@@ -466,7 +560,12 @@ var File_fileManagement_proto protoreflect.FileDescriptor
 var file_fileManagement_proto_rawDesc = []byte{
 	0x0a, 0x14, 0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e, 0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61,
-	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x45, 0x0a, 0x11, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x43,
+	0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x2a, 0x0a, 0x0c, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x46, 0x69, 0x6c, 0x65, 0x4e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x46, 0x69, 0x6c, 0x65, 0x4e, 0x61,
+	0x6d, 0x65, 0x22, 0x22, 0x0a, 0x0a, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x12, 0x14, 0x0a, 0x05, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x05, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x22, 0x45, 0x0a, 0x11, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x43,
 	0x68, 0x75, 0x6e, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x46,
 	0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x46,
 	0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x43, 0x68, 0x75, 0x6e, 0x6b,
@@ -499,7 +598,7 @@ var file_fileManagement_proto_rawDesc = []byte{
 	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65,
 	0x22, 0x26, 0x0a, 0x0a, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x18,
 	0x0a, 0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x32, 0xd1, 0x02, 0x0a, 0x15, 0x46, 0x69, 0x6c,
+	0x07, 0x4d, 0x65, 0x6e, 0x73, 0x61, 0x6a, 0x65, 0x32, 0x9e, 0x03, 0x0a, 0x15, 0x46, 0x69, 0x6c,
 	0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69,
 	0x63, 0x65, 0x12, 0x46, 0x0a, 0x08, 0x53, 0x61, 0x79, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x12, 0x1c,
 	0x2e, 0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e,
@@ -520,8 +619,13 @@ var file_fileManagement_proto_rawDesc = []byte{
 	0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x43, 0x68, 0x75,
 	0x6e, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x66, 0x69, 0x6c, 0x65,
 	0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x53, 0x74, 0x6f, 0x72, 0x65,
-	0x43, 0x68, 0x75, 0x6e, 0x6b, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x43, 0x68, 0x75, 0x6e, 0x6b, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x00, 0x12, 0x4b, 0x0a, 0x0d,
+	0x52, 0x65, 0x74, 0x72, 0x69, 0x65, 0x76, 0x65, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x12, 0x1c, 0x2e,
+	0x66, 0x69, 0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x43,
+	0x68, 0x75, 0x6e, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x66, 0x69,
+	0x6c, 0x65, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x43, 0x68, 0x75,
+	0x6e, 0x6b, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -536,28 +640,32 @@ func file_fileManagement_proto_rawDescGZIP() []byte {
 	return file_fileManagement_proto_rawDescData
 }
 
-var file_fileManagement_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_fileManagement_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_fileManagement_proto_goTypes = []interface{}{
-	(*StoreChunkRequest)(nil), // 0: fileManagement.StoreChunkRequest
-	(*StoreChunkReply)(nil),   // 1: fileManagement.StoreChunkReply
-	(*StatusRequest)(nil),     // 2: fileManagement.StatusRequest
-	(*StatusReply)(nil),       // 3: fileManagement.StatusReply
-	(*ChunkInformation)(nil),  // 4: fileManagement.ChunkInformation
-	(*ChunkStatus)(nil),       // 5: fileManagement.ChunkStatus
-	(*HelloRequest)(nil),      // 6: fileManagement.HelloRequest
-	(*HelloReply)(nil),        // 7: fileManagement.HelloReply
+	(*ChunkRequest)(nil),      // 0: fileManagement.ChunkRequest
+	(*ChunkReply)(nil),        // 1: fileManagement.ChunkReply
+	(*StoreChunkRequest)(nil), // 2: fileManagement.StoreChunkRequest
+	(*StoreChunkReply)(nil),   // 3: fileManagement.StoreChunkReply
+	(*StatusRequest)(nil),     // 4: fileManagement.StatusRequest
+	(*StatusReply)(nil),       // 5: fileManagement.StatusReply
+	(*ChunkInformation)(nil),  // 6: fileManagement.ChunkInformation
+	(*ChunkStatus)(nil),       // 7: fileManagement.ChunkStatus
+	(*HelloRequest)(nil),      // 8: fileManagement.HelloRequest
+	(*HelloReply)(nil),        // 9: fileManagement.HelloReply
 }
 var file_fileManagement_proto_depIdxs = []int32{
-	6, // 0: fileManagement.FileManagementService.SayHello:input_type -> fileManagement.HelloRequest
-	4, // 1: fileManagement.FileManagementService.SendChunk:input_type -> fileManagement.ChunkInformation
-	2, // 2: fileManagement.FileManagementService.CheckNodeStatus:input_type -> fileManagement.StatusRequest
-	0, // 3: fileManagement.FileManagementService.SaveChunk:input_type -> fileManagement.StoreChunkRequest
-	7, // 4: fileManagement.FileManagementService.SayHello:output_type -> fileManagement.HelloReply
-	5, // 5: fileManagement.FileManagementService.SendChunk:output_type -> fileManagement.ChunkStatus
-	3, // 6: fileManagement.FileManagementService.CheckNodeStatus:output_type -> fileManagement.StatusReply
-	1, // 7: fileManagement.FileManagementService.SaveChunk:output_type -> fileManagement.StoreChunkReply
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	8, // 0: fileManagement.FileManagementService.SayHello:input_type -> fileManagement.HelloRequest
+	6, // 1: fileManagement.FileManagementService.SendChunk:input_type -> fileManagement.ChunkInformation
+	4, // 2: fileManagement.FileManagementService.CheckNodeStatus:input_type -> fileManagement.StatusRequest
+	2, // 3: fileManagement.FileManagementService.SaveChunk:input_type -> fileManagement.StoreChunkRequest
+	0, // 4: fileManagement.FileManagementService.RetrieveChunk:input_type -> fileManagement.ChunkRequest
+	9, // 5: fileManagement.FileManagementService.SayHello:output_type -> fileManagement.HelloReply
+	7, // 6: fileManagement.FileManagementService.SendChunk:output_type -> fileManagement.ChunkStatus
+	5, // 7: fileManagement.FileManagementService.CheckNodeStatus:output_type -> fileManagement.StatusReply
+	3, // 8: fileManagement.FileManagementService.SaveChunk:output_type -> fileManagement.StoreChunkReply
+	1, // 9: fileManagement.FileManagementService.RetrieveChunk:output_type -> fileManagement.ChunkReply
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -570,7 +678,7 @@ func file_fileManagement_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_fileManagement_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StoreChunkRequest); i {
+			switch v := v.(*ChunkRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -582,7 +690,7 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StoreChunkReply); i {
+			switch v := v.(*ChunkReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -594,7 +702,7 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StatusRequest); i {
+			switch v := v.(*StoreChunkRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -606,7 +714,7 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StatusReply); i {
+			switch v := v.(*StoreChunkReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -618,7 +726,7 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChunkInformation); i {
+			switch v := v.(*StatusRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -630,7 +738,7 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChunkStatus); i {
+			switch v := v.(*StatusReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -642,7 +750,7 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HelloRequest); i {
+			switch v := v.(*ChunkInformation); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -654,6 +762,30 @@ func file_fileManagement_proto_init() {
 			}
 		}
 		file_fileManagement_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChunkStatus); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_fileManagement_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*HelloRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_fileManagement_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*HelloReply); i {
 			case 0:
 				return &v.state
@@ -672,7 +804,7 @@ func file_fileManagement_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_fileManagement_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -702,6 +834,7 @@ type FileManagementServiceClient interface {
 	SendChunk(ctx context.Context, in *ChunkInformation, opts ...grpc.CallOption) (*ChunkStatus, error)
 	CheckNodeStatus(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusReply, error)
 	SaveChunk(ctx context.Context, in *StoreChunkRequest, opts ...grpc.CallOption) (*StoreChunkReply, error)
+	RetrieveChunk(ctx context.Context, in *ChunkRequest, opts ...grpc.CallOption) (*ChunkReply, error)
 }
 
 type fileManagementServiceClient struct {
@@ -748,12 +881,22 @@ func (c *fileManagementServiceClient) SaveChunk(ctx context.Context, in *StoreCh
 	return out, nil
 }
 
+func (c *fileManagementServiceClient) RetrieveChunk(ctx context.Context, in *ChunkRequest, opts ...grpc.CallOption) (*ChunkReply, error) {
+	out := new(ChunkReply)
+	err := c.cc.Invoke(ctx, "/fileManagement.FileManagementService/RetrieveChunk", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileManagementServiceServer is the server API for FileManagementService service.
 type FileManagementServiceServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 	SendChunk(context.Context, *ChunkInformation) (*ChunkStatus, error)
 	CheckNodeStatus(context.Context, *StatusRequest) (*StatusReply, error)
 	SaveChunk(context.Context, *StoreChunkRequest) (*StoreChunkReply, error)
+	RetrieveChunk(context.Context, *ChunkRequest) (*ChunkReply, error)
 }
 
 // UnimplementedFileManagementServiceServer can be embedded to have forward compatible implementations.
@@ -771,6 +914,9 @@ func (*UnimplementedFileManagementServiceServer) CheckNodeStatus(context.Context
 }
 func (*UnimplementedFileManagementServiceServer) SaveChunk(context.Context, *StoreChunkRequest) (*StoreChunkReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveChunk not implemented")
+}
+func (*UnimplementedFileManagementServiceServer) RetrieveChunk(context.Context, *ChunkRequest) (*ChunkReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetrieveChunk not implemented")
 }
 
 func RegisterFileManagementServiceServer(s *grpc.Server, srv FileManagementServiceServer) {
@@ -849,6 +995,24 @@ func _FileManagementService_SaveChunk_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileManagementService_RetrieveChunk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChunkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagementServiceServer).RetrieveChunk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/fileManagement.FileManagementService/RetrieveChunk",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagementServiceServer).RetrieveChunk(ctx, req.(*ChunkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _FileManagementService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "fileManagement.FileManagementService",
 	HandlerType: (*FileManagementServiceServer)(nil),
@@ -868,6 +1032,10 @@ var _FileManagementService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SaveChunk",
 			Handler:    _FileManagementService_SaveChunk_Handler,
+		},
+		{
+			MethodName: "RetrieveChunk",
+			Handler:    _FileManagementService_RetrieveChunk_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
