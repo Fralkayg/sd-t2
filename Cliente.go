@@ -236,7 +236,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 					os.Exit(1)
 				}
 
-				file, err = os.OpenFile(newFileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+				file, err := os.OpenFile(newFileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 
 				if err != nil {
 					fmt.Println(err)
