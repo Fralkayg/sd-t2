@@ -112,6 +112,8 @@ func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.Ch
 		s.file.chunks = append(s.file.chunks, chunk)
 	}
 
+	s.file = File{}
+
 	return &pb.ChunkStatus{Status: "Parte " + strconv.Itoa(int(in.ChunkIndex)) + " OK"}, nil
 }
 

@@ -129,7 +129,7 @@ func displayLibrary() []string {
 	return files
 }
 
-func uploadBook(conn *grpc.ClientConn, option int) {
+func uploadBook(option int) {
 	var validOption bool
 	var bookIndex int
 	validOption = true
@@ -152,21 +152,29 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 					lastChunk = false
 				}
 
-				chunk := obtainChunk(chunkedFile.ChunkName[i])
+				conn, address := connectToDataNode()
 
-				c := pb.NewFileManagementServiceClient(conn)
+				if conn != nil {
+					chunk := obtainChunk(chunkedFile.ChunkName[i])
 
-				status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
-					Chunk:      chunk,
-					ChunkIndex: int32(i),
-					FileName:   chunkedFile.FileName,
-					LastChunk:  lastChunk,
-					Option:     int32(option),
-					TotalParts: int32(chunkedFile.TotalParts),
-					Address:    "dist54:50051",
-				})
+					c := pb.NewFileManagementServiceClient(conn)
 
-				fmt.Println(status)
+					status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
+						Chunk:      chunk,
+						ChunkIndex: int32(i),
+						FileName:   chunkedFile.FileName,
+						LastChunk:  lastChunk,
+						Option:     int32(option),
+						TotalParts: int32(chunkedFile.TotalParts),
+						Address:    address,
+					})
+
+					fmt.Println(status)
+
+				} else {
+					//do nothing
+				}
+
 			}
 			validOption = false
 		}
@@ -174,7 +182,7 @@ func uploadBook(conn *grpc.ClientConn, option int) {
 	}
 }
 
-func centralizedOrDistributed(conn *grpc.ClientConn) {
+func centralizedOrDistributed() {
 	var validOption bool
 	var option int
 	validOption = true
@@ -188,10 +196,10 @@ func centralizedOrDistributed(conn *grpc.ClientConn) {
 
 		switch option {
 		case 1:
-			uploadBook(conn, option)
+			uploadBook(option)
 			validOption = false
 		case 2:
-			uploadBook(conn, option)
+			uploadBook(option)
 			validOption = false
 		case 3:
 			validOption = false
@@ -199,6 +207,42 @@ func centralizedOrDistributed(conn *grpc.ClientConn) {
 			fmt.Println("Opción inválida. Reingrese.")
 		}
 	}
+}
+
+func connectToDataNode() (*grpc.ClientConn, string) {
+	for i := 53; i < 56; i++ {
+		address := "dist" + strconv.Itoa(i) + port
+		fmt.Println(address)
+		conn, status := checkStatus(address)
+
+		if i == 53 && status == 1 {
+			return conn, address
+		} else if i == 54 && status == 1 {
+			return conn, address
+		} else if i == 55 && status == 1 {
+			return conn, address
+		} else {
+			fmt.Println("No hay un data node en línea para realizar la petición.")
+			return nil, ""
+		}
+	}
+}
+
+func checkStatus(address string) (*grpc.ClientConn, int32) {
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer conn.Close()
+
+	c := pb.NewFileManagementServiceClient(conn)
+
+	_, connectionError := c.CheckNodeStatus(context.Background(), &pb.StatusRequest{Online: true})
+	if connectionError != nil {
+		return conn, 0
+	}
+	return conn, 1
 }
 
 func main() {
@@ -220,8 +264,7 @@ func main() {
 		fmt.Scanln(&option)
 		switch option {
 		case 1:
-			// fmt.Println("Subir libro")
-			centralizedOrDistributed(conn)
+			centralizedOrDistributed()
 		case 2:
 			fmt.Println("Bajar libro")
 		case 3:
