@@ -251,7 +251,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 
 				defer newFileChunk.Close()
 
-				n, writeError := newFileChunk.Write(chunk.Chunk)
+				_, writeError := newFileChunk.Write(chunk.Chunk)
 
 				if writeError != nil {
 					fmt.Println(err)
