@@ -198,26 +198,30 @@ func downloadBookMenu() {
 		fmt.Println("Error al leer el archivo LOG")
 	}
 
-	for i := 0; i < len(logReply.Files); i++ {
-		fmt.Println(strconv.Itoa(int(i+1)) + ":" + logReply.Files[i].FileName)
-		// for j := 0; j < len(logReply.Files[i].Distribution); j++ {
-		// 	fmt.Println("Distribucion de archivo")
-		// 	fmt.Println(logReply.Files[i].Distribution[j].Part + " " + logReply.Files[i].Distribution[j].Address)
-		// }
-	}
 	validOption := true
 	var option int
 	for validOption {
 		fmt.Println("Escoja un archivo a descargar:")
+		for i := 0; i < len(logReply.Files); i++ {
+			fmt.Println(strconv.Itoa(int(i+1)) + ":" + logReply.Files[i].FileName)
+		}
 		fmt.Scanln(&option)
 		if option > 0 && option <= len(logReply.Files) {
 			validOption = false
 		}
 	}
-	downloadBook(option)
+	downloadBook(logReply.Files, option-1)
 }
 
-func downloadBook(option int) {
+func downloadBook(files []*pb2.LogReply_FileInfo, option int) {
+	for i := 0; i < len(files); i++ {
+		if files[i].FileIndex == int32(option) {
+			for j := 0; j < len(files[i].Distribution); j++ {
+				fmt.Println(files[i].Distribution[j].Part)
+				fmt.Println(files[i].Distribution[j].Address)
+			}
+		}
+	}
 	fmt.Println(option)
 }
 
