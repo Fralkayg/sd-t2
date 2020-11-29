@@ -33,6 +33,8 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 
 	defer f.Close()
 
+	// var logReply pb2.LogReply
+
 	scanner := bufio.NewScanner(f)
 
 	var files []pb2.LogReply_FileInfo
@@ -58,7 +60,7 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 			aux2.Part = filePart[0]
 			aux2.Address = filePart[1]
 
-			fileDistribution = append(fileDistribution, aux2)
+			aux.Distribution = append(aux.Distribution, &aux2)
 		}
 
 		aux.FileIndex = j
@@ -70,10 +72,12 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		log.Fatal(err)
 	}
 
+	//ESTO FUNCIONA
 	var logReply pb2.LogReply
 
 	for i := 0; i < len(files); i++ {
 		logReply.Files = append(logReply.Files, &files[i])
+
 	}
 
 	return &logReply, nil
