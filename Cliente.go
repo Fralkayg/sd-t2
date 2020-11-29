@@ -299,13 +299,15 @@ func connectToDataNode() string {
 		_, status := checkStatus(address)
 
 		if i == 53 && status == 1 {
+			fmt.Println("DataNode 53 en línea")
 			return address
 		} else if i == 54 && status == 1 {
+			fmt.Println("DataNode 54 en línea")
 			return address
 		} else if i == 55 && status == 1 {
+			fmt.Println("DataNode 55 en línea")
 			return address
 		} else {
-			fmt.Println("No hay un data node en línea para realizar la petición.")
 			return ""
 		}
 	}
