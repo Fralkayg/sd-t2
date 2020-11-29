@@ -243,13 +243,13 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 					os.Exit(1)
 				}
 
-				var writePosition int64 = 0
+				// var writePosition int64 = 0
 
 				for k := uint64(0); k < uint64(len(files[i].Distribution)); k++ {
 
 					chunkBufferBytes := chunk.Chunk
 
-					n, err := file.Write(chunkBufferBytes)
+					_, err := file.Write(chunkBufferBytes)
 
 					if err != nil {
 						fmt.Println(err)
