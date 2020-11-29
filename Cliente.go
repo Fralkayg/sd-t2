@@ -202,9 +202,12 @@ func downloadBook() {
 
 	for i := 0; i < len(logReply.Files); i++ {
 		fmt.Println("Nombre archivo: " + logReply.Files[i].FileName)
+		for j := 0; j < len(logReply.Files[i].Distribution); j++ {
+			fmt.Println("Distribucion de archivo")
+			fmt.Println(logReply.Files[i].Distribution[j].Part + " " + logReply.Files[i].Distribution[j].Address)
+		}
 	}
 
-	fmt.Println(logReply)
 }
 
 func centralizedOrDistributed() {

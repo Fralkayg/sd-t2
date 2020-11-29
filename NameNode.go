@@ -70,14 +70,13 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		log.Fatal(err)
 	}
 
-	var wea pb2.LogReply
+	var logReply pb2.LogReply
 
 	for i := 0; i < len(files); i++ {
-		wea.Files = append(wea.Files, &files[i])
+		logReply.Files = append(logReply.Files, &files[i])
 	}
 
-	return &wea, nil
-	// return &pb2.LogReply{}, nil
+	return &logReply, nil
 }
 
 func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest2) (*pb2.DistributionReply2, error) {
