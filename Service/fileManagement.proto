@@ -3,7 +3,7 @@ package fileManagement;
 
 service FileManagementService{
     rpc SayHello(HelloRequest) returns (HelloReply){}
-    rpc SendChunk(ChunkInformation) returns (ChunkStatus){}
+    rpc SendChunks(ChunkInformation) returns (ChunkStatus){}
     rpc CheckNodeStatus(StatusRequest) returns (StatusReply){}
     rpc SaveChunk(StoreChunkRequest) returns (StoreChunkReply){}
     rpc RetrieveChunk(ChunkRequest) returns (ChunkReply){}
@@ -35,13 +35,17 @@ message StatusReply{
 }
 
 message ChunkInformation{
-    bytes Chunk = 1;
-    int32 ChunkIndex = 2;
-    string FileName = 3;
-    bool LastChunk = 4;
-    int32 Option = 5;
-    int32 TotalParts = 6;
-    string Address = 7;
+    string FileName = 1;
+    int32 TotalParts = 2;
+    int32 Option = 3;
+    string Address = 4;
+
+    message ChunkData{
+        bytes Chunk = 1;
+        int32 ChunkIndex = 2;
+    }
+
+    repeated ChunkData Chunks = 5;
 }
 
 message ChunkStatus{

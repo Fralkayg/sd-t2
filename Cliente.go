@@ -157,30 +157,39 @@ func uploadBook(option int) {
 			defer conn.Close()
 
 			fmt.Println("paso")
+
+			var chunkInformation pb.ChunkInformation
+			chunkInformation.FileName = chunkedFile.FileName
+			chunkInformation.TotalParts = chunkedFile.TotalParts
+			chunkInformation.Option = int32(option)
+			chunkInformation.Address = address
+
 			for i := 0; i < chunkedFile.TotalParts; i++ {
-				var lastChunk bool
-
-				if i == chunkedFile.TotalParts-1 {
-					lastChunk = true
-				} else {
-					lastChunk = false
-				}
-
 				chunk := obtainChunk(chunkedFile.ChunkName[i])
 
-				c := pb.NewFileManagementServiceClient(conn)
+				var aux pb.ChunkInformation_ChunkData
 
-				status, _ := c.SendChunk(context.Background(), &pb.ChunkInformation{
-					Chunk:      chunk,
-					ChunkIndex: int32(i),
-					FileName:   chunkedFile.FileName,
-					LastChunk:  lastChunk,
-					Option:     int32(option),
-					TotalParts: int32(chunkedFile.TotalParts),
-					Address:    address,
-				})
-				fmt.Println(status)
+				aux.Chunk = chunk
+				aux.ChunkIndex = int32(i)
+
+				chunkInformation.Chunks = append(chunkInformation.Chunks, aux)
 			}
+
+			c := pb.NewFileManagementServiceClient(conn)
+
+			status, _ := c.SendChunks(contex.Background(), &chunkInformation)
+
+			// status, _ := c.SendChunks(context.Background(), &pb.ChunkInformation{
+			// 	Chunk:      chunk,
+			// 	ChunkIndex: int32(i),
+			// 	FileName:   chunkedFile.FileName,
+			// 	LastChunk:  lastChunk,
+			// 	Option:     int32(option),
+			// 	TotalParts: int32(chunkedFile.TotalParts),
+			// 	Address:    address,
+			// })
+
+			fmt.Println(status)
 
 			validOption = false
 		}

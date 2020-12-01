@@ -75,62 +75,59 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 	return &pb.HelloReply{Mensaje: "Hello " + in.GetMensaje()}, nil
 }
 
-func (s *server) SendChunk(ctx context.Context, in *pb.ChunkInformation) (*pb.ChunkStatus, error) {
-	if in.LastChunk {
-		fmt.Println("Llego el último chunk.")
-		var chunk Chunk
-		chunk.ChunkIndex = int(in.ChunkIndex)
-		chunk.Chunk = in.Chunk
-		s.file.chunks = append(s.file.chunks, chunk)
-		s.currentAddress = in.Address
+func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.ChunkStatus, error) {
+	for s.lock {
+	}
 
-		if in.Option == 1 {
-			generateCentralizedDistribution(s)
-		} else {
-			notValid := true
-			firstNodeStatus := int32(0)
-			secondNodeStatus := int32(0)
-			thirdNodeStatus := int32(0)
+	s.lock = true
 
-			//Propuesta inicial asume 3 nodos
-			availableNodes := int32(3)
+	s.file.fileName = in.FileName
+	s.file.totalParts = int(in.TotalParts)
+	s.currentAddress = in.Address
 
-			for notValid {
-				first, second, third, nodes := generateDistributedDistribution(s)
-				if nodes == availableNodes {
-					notValid = false
-				} else {
-					firstNodeStatus = first
-					secondNodeStatus = second
-					thirdNodeStatus = third
-					availableNodes = nodes
-				}
-			}
-			fmt.Println("Salio del ciclo. Estados:")
-			fmt.Println("Nodos: " + strconv.Itoa(int(availableNodes)))
-			fmt.Println(firstNodeStatus)
-			fmt.Println(secondNodeStatus)
-			fmt.Println(thirdNodeStatus)
-
-			generateDistribution(s, availableNodes, s.file.totalParts, firstNodeStatus, secondNodeStatus, thirdNodeStatus)
-
-			s.file = File{}
-
-		}
-	} else {
-		fmt.Println("no llega bien aqui")
-		fmt.Println(in.FileName)
-		fmt.Println(in.TotalParts)
-		s.file.fileName = in.FileName
-		s.file.totalParts = int(in.TotalParts)
-
+	for i := 0; i < len(in.Chunks); i++ {
 		var chunk Chunk
 		chunk.ChunkIndex = int(in.ChunkIndex)
 		chunk.Chunk = in.Chunk
 		s.file.chunks = append(s.file.chunks, chunk)
 	}
 
-	return &pb.ChunkStatus{Status: "Parte " + strconv.Itoa(int(in.ChunkIndex)) + " OK"}, nil
+	if in.Option == 1 {
+		generateCentralizedDistribution(s)
+	} else {
+		notValid := true
+		firstNodeStatus := int32(0)
+		secondNodeStatus := int32(0)
+		thirdNodeStatus := int32(0)
+
+		//Propuesta inicial asume 3 nodos
+		availableNodes := int32(3)
+
+		for notValid {
+			first, second, third, nodes := generateDistributedDistribution(s)
+			if nodes == availableNodes {
+				notValid = false
+			} else {
+				firstNodeStatus = first
+				secondNodeStatus = second
+				thirdNodeStatus = third
+				availableNodes = nodes
+			}
+		}
+		fmt.Println("Salio del ciclo. Estados:")
+		fmt.Println("Nodos: " + strconv.Itoa(int(availableNodes)))
+		fmt.Println(firstNodeStatus)
+		fmt.Println(secondNodeStatus)
+		fmt.Println(thirdNodeStatus)
+
+		generateDistribution(s, availableNodes, s.file.totalParts, firstNodeStatus, secondNodeStatus, thirdNodeStatus)
+
+	}
+
+	s.file = File{}
+
+	s.lock = false
+	return &pb.ChunkStatus{Status: "Se recibio el archivo " + in.FileName}, nil
 }
 
 func generateDistribution(s *server, availableNodes int32, totalParts int, firstNodeStatus int32, secondNodeStatus int32, thirdNodeStatus int32) {
