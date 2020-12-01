@@ -160,7 +160,7 @@ func uploadBook(option int) {
 
 			var chunkInformation pb.ChunkInformation
 			chunkInformation.FileName = chunkedFile.FileName
-			chunkInformation.TotalParts = chunkedFile.TotalParts
+			chunkInformation.TotalParts = int32(chunkedFile.TotalParts)
 			chunkInformation.Option = int32(option)
 			chunkInformation.Address = address
 
@@ -172,12 +172,12 @@ func uploadBook(option int) {
 				aux.Chunk = chunk
 				aux.ChunkIndex = int32(i)
 
-				chunkInformation.Chunks = append(chunkInformation.Chunks, aux)
+				chunkInformation.Chunks = append(chunkInformation.Chunks, &aux)
 			}
 
 			c := pb.NewFileManagementServiceClient(conn)
 
-			status, _ := c.SendChunks(contex.Background(), &chunkInformation)
+			status, _ := c.SendChunks(context.Background(), &chunkInformation)
 
 			// status, _ := c.SendChunks(context.Background(), &pb.ChunkInformation{
 			// 	Chunk:      chunk,
