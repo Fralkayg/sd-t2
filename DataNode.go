@@ -87,8 +87,8 @@ func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.C
 
 	for i := 0; i < len(in.Chunks); i++ {
 		var chunk Chunk
-		chunk.ChunkIndex = int(in.ChunkIndex)
-		chunk.Chunk = in.Chunk
+		chunk.ChunkIndex = int(in.Chunks[i].ChunkIndex)
+		chunk.Chunk = in.Chunks[i].Chunk
 		s.file.chunks = append(s.file.chunks, chunk)
 	}
 
