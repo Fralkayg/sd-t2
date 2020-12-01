@@ -209,6 +209,7 @@ func downloadBookMenu() {
 	logReply, er := c.ReadLogFile(context.Background(), &pb2.LogRequest{File: "LOG.txt"})
 	if er != nil {
 		fmt.Println("Error al leer el archivo LOG")
+		return
 	}
 
 	validOption := true
@@ -266,23 +267,21 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 			if openFileError != nil {
 				fmt.Println("Error al abrir el archivo")
 				fmt.Println(err)
-				return false
-			}
+			} else {
+				for k := 0; k < len(chunks); k++ {
+					_, writeError := file.Write(chunks[k].chunkInfo)
 
-			for k := 0; k < len(chunks); k++ {
-				_, writeError := file.Write(chunks[k].chunkInfo)
+					if writeError != nil {
+						fmt.Println(err)
+						os.Exit(1)
+					}
 
-				if writeError != nil {
-					fmt.Println(err)
-					os.Exit(1)
+					file.Sync()
 				}
 
-				file.Sync()
+				file.Close()
+				return true
 			}
-
-			file.Close()
-			return true
-
 		}
 	}
 	fmt.Println(option)
