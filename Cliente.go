@@ -266,21 +266,23 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 			if openFileError != nil {
 				fmt.Println("Error al abrir el archivo")
 				fmt.Println(err)
-			} else {
-				for k := 0; k < len(chunks); k++ {
-					_, writeError := file.Write(chunks[k].chunkInfo)
+				return false
+			}
 
-					if writeError != nil {
-						fmt.Println(err)
-						os.Exit(1)
-					}
+			for k := 0; k < len(chunks); k++ {
+				_, writeError := file.Write(chunks[k].chunkInfo)
 
-					file.Sync()
+				if writeError != nil {
+					fmt.Println(err)
+					os.Exit(1)
 				}
 
-				file.Close()
-				return true
+				file.Sync()
 			}
+
+			file.Close()
+			return true
+
 		}
 	}
 	fmt.Println(option)
