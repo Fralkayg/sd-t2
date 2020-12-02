@@ -230,15 +230,46 @@ func downloadBookMenu() {
 	var option int
 	for validOption {
 		fmt.Println("Escoja un archivo a descargar:")
+		fmt.Println("0: Salir")
 		for i := 0; i < len(logReply.Files); i++ {
 			fmt.Println(strconv.Itoa(int(i+1)) + ":" + logReply.Files[i].FileName)
 		}
 		fmt.Scanln(&option)
+
+		if option == 0 {
+			return
+		}
+
 		if option > 0 && option <= len(logReply.Files) {
 			validOption = false
 		}
 	}
 	downloadBook(logReply.Files, option-1)
+}
+
+//Descripción: Muestra los libros que ha subido el cliente.
+func displayUploadedBooks() {
+	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	c := pb2.NewDataToNameServiceClient(conn)
+
+	logReply, er := c.ReadLogFile(context.Background(), &pb2.LogRequest{File: "LOG.txt"})
+	if er != nil {
+		fmt.Println("Error al leer el archivo LOG")
+		return
+	}
+
+	if len(logReply.Files) == 0 {
+		fmt.Println("No hay libros disponibles para descargar.")
+		return
+	}
+	for i := 0; i < len(logReply.Files); i++ {
+		fmt.Println(strconv.Itoa(int(i+1)) + ":" + logReply.Files[i].FileName)
+	}
 }
 
 //Descripción: Obtiene cada chunks en el DataNode disponible para finalmente rearmar el archivo y guardarlo en la carpeta Downloads
@@ -395,6 +426,8 @@ func main() {
 		case 2:
 			downloadBookMenu()
 		case 3:
+			displayUploadedBooks()
+		case 4:
 			fmt.Println("Adiós!")
 			validOption = false
 		default:
