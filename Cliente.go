@@ -151,6 +151,11 @@ func uploadBook(option int) {
 			chunkedFile := splitFile(files[bookIndex-1])
 			address := connectToDataNode()
 
+			if address == "" {
+				fmt.Println("No hay DataNode disponible para procesar solicitud. Reintentar mas tarde.")
+				return
+			}
+
 			conn, err := grpc.Dial(address, grpc.WithInsecure())
 			if err != nil {
 				log.Fatalf("did not connect: %v", err)
