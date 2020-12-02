@@ -153,6 +153,7 @@ func uploadBook(option int) {
 		if bookIndex > len(files) || bookIndex < 0 {
 			fmt.Println("Opción invalida. Reingresar")
 		} else {
+			start := time.Now()
 			chunkedFile := splitFile(files[bookIndex-1])
 			address := connectToDataNode()
 
@@ -188,17 +189,15 @@ func uploadBook(option int) {
 
 			status, _ := c.SendChunks(context.Background(), &chunkInformation)
 
-			// status, _ := c.SendChunks(context.Background(), &pb.ChunkInformation{
-			// 	Chunk:      chunk,
-			// 	ChunkIndex: int32(i),
-			// 	FileName:   chunkedFile.FileName,
-			// 	LastChunk:  lastChunk,
-			// 	Option:     int32(option),
-			// 	TotalParts: int32(chunkedFile.TotalParts),
-			// 	Address:    address,
-			// })
-
 			fmt.Println(status)
+
+			elapsed := time.Since(start)
+
+			if option == 1 {
+				fmt.Println("Tiempo de ejecución distribucion centralizada: ", elapsed)
+			} else {
+				fmt.Println("Tiempo de ejecución distribucion distribuida: ", elapsed)
+			}
 
 			validOption = false
 		}
@@ -321,21 +320,11 @@ func centralizedOrDistributed() {
 
 		switch option {
 		case 1:
-			start := time.Now()
 			uploadBook(option)
 			validOption = false
-			elapsed := time.Since(start)
-
-			fmt.Println("Tiempo de ejecución distribucion centralizada: ", elapsed)
-
 		case 2:
-			start := time.Now()
 			uploadBook(option)
 			validOption = false
-			elapsed := time.Since(start)
-
-			fmt.Println("Tiempo de ejecución distribucion distribuida: ", elapsed)
-
 		case 3:
 			validOption = false
 		default:
