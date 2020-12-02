@@ -44,34 +44,38 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 	j := int32(0)
 
 	for scanner.Scan() {
-		var aux pb2.LogReply_FileInfo
-		line := strings.Split(scanner.Text(), " ")
+		if scanner.Text() == "" {
+			//donothing
+		} else {
+			var aux pb2.LogReply_FileInfo
+			line := strings.Split(scanner.Text(), " ")
 
-		totalParts, _ := strconv.Atoi(line[1])
+			totalParts, _ := strconv.Atoi(line[1])
 
-		aux.FileName = line[0]
-		aux.TotalParts = line[1]
+			aux.FileName = line[0]
+			aux.TotalParts = line[1]
 
-		for i := 0; i < totalParts; i++ {
-			var aux2 pb2.LogReply_FileInfo_FileDistribution
-			scanner.Scan()
-			filePart := strings.Split(scanner.Text(), " ")
+			for i := 0; i < totalParts; i++ {
+				var aux2 pb2.LogReply_FileInfo_FileDistribution
+				scanner.Scan()
+				filePart := strings.Split(scanner.Text(), " ")
 
-			aux2.Part = filePart[0]
-			aux2.Address = filePart[1]
+				aux2.Part = filePart[0]
+				aux2.Address = filePart[1]
 
-			aux.Distribution = append(aux.Distribution, &aux2)
+				aux.Distribution = append(aux.Distribution, &aux2)
+			}
+
+			aux.FileIndex = j
+
+			files = append(files, aux)
+			j++
 		}
-
-		aux.FileIndex = j
-
-		files = append(files, aux)
-		j++
 
 	}
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error al leer el archivo LOG")
-		return nil, nil
+		return nil, errors.New("No hay libros disponibles para descargar")
 	}
 
 	//ESTO FUNCIONA
