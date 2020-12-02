@@ -230,7 +230,7 @@ func downloadBookMenu() {
 	var option int
 	for validOption {
 		fmt.Println("Escoja un archivo a descargar:")
-		fmt.Println("0: Salir")
+		fmt.Println("0:Volver")
 		for i := 0; i < len(logReply.Files); i++ {
 			fmt.Println(strconv.Itoa(int(i+1)) + ":" + logReply.Files[i].FileName)
 		}
