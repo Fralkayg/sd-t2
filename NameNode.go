@@ -82,6 +82,12 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 }
 
 func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest2) (*pb2.DistributionReply2, error) {
+	for s.lock {
+
+	}
+
+	s.lock = true
+
 	file, err := os.OpenFile("./LOG.txt", os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
 		log.Println(err)
@@ -123,6 +129,8 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 
 	file.Close()
 
+	s.lock = false
+
 	return &pb2.DistributionReply2{
 		FileName:   in.FileName,
 		TotalParts: int32(in.TotalParts),
@@ -136,6 +144,12 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 }
 
 func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.DistributionRequest) (*pb2.DistributionReply, error) {
+	for s.lock {
+
+	}
+
+	s.lock = true
+
 	var firstNodeDistribution []int32
 	var secondNodeDistribution []int32
 	var thirdNodeDistribution []int32
@@ -235,7 +249,19 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 		fmt.Println("Propuesta aceptada.")
 	} else {
 		fmt.Println("Se rechazo la propuesta enviada. Se reenvio una nueva propuesta válida.")
+		fmt.Println("La nueva propuesta considera los siguientes nodos.")
+		if firstNodeStatus == 1 {
+			fmt.Println("DataNode 53 incluido en propuesta de distribucion.")
+		}
+		if secondNodeStatus == 1 {
+			fmt.Println("DataNode 54 incluido en propuesta de distribucion.")
+		}
+		if thirdNodeStatus == 1 {
+			fmt.Println("DataNode 55 incluido en propuesta de distribucion.")
+		}
 	}
+
+	s.lock = false
 
 	return &pb2.DistributionReply{
 		FileName:   in.FileName,

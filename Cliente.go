@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	pb "./Service"
 	pb2 "./Service2"
@@ -302,11 +303,21 @@ func centralizedOrDistributed() {
 
 		switch option {
 		case 1:
+			start := time.Now()
 			uploadBook(option)
 			validOption = false
+			elapsed := time.Since(start)
+
+			fmt.Println("Tiempo de ejecución distribucion centralizada: ", elapsed)
+
 		case 2:
+			start := time.Now()
 			uploadBook(option)
 			validOption = false
+			elapsed := time.Since(start)
+
+			fmt.Println("Tiempo de ejecución distribucion distribuida: ", elapsed)
+
 		case 3:
 			validOption = false
 		default:

@@ -104,6 +104,7 @@ func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.C
 		availableNodes := int32(3)
 
 		for notValid {
+			fmt.Println("Generando propuesta de distribución")
 			first, second, third, nodes := generateDistributedDistribution(s)
 			if nodes == availableNodes {
 				notValid = false
@@ -115,10 +116,16 @@ func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.C
 			}
 		}
 		fmt.Println("Salio del ciclo. Estados:")
-		fmt.Println("Nodos: " + strconv.Itoa(int(availableNodes)))
-		fmt.Println(firstNodeStatus)
-		fmt.Println(secondNodeStatus)
-		fmt.Println(thirdNodeStatus)
+		fmt.Println("Nodos disponibles: " + strconv.Itoa(int(availableNodes)))
+		if firstNodeStatus == 1 {
+			fmt.Println("DataNode 53 incluido en propuesta")
+		}
+		if secondNodeStatus == 1 {
+			fmt.Println("DataNode 54 incluido en propuesta")
+		}
+		if thirdNodeStatus == 1 {
+			fmt.Println("DataNode 55 incluido en propuesta")
+		}
 
 		generateDistribution(s, availableNodes, s.file.totalParts, firstNodeStatus, secondNodeStatus, thirdNodeStatus)
 
@@ -188,11 +195,11 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 
 	c := pb2.NewDataToNameServiceClient(conn)
 
-	fmt.Println("Largo maquina 0: ")
+	fmt.Println("Largo distribucion DataNode 53: ")
 	fmt.Println(len(firstNodeDistribution))
-	fmt.Println("Largo maquina 1: ")
+	fmt.Println("Largo distribucion DataNode 54: ")
 	fmt.Println(len(secondNodeDistribution))
-	fmt.Println("Largo maquina 2: ")
+	fmt.Println("Largo distribucion DataNode 55: ")
 	fmt.Println(len(thirdNodeDistribution))
 
 	distributionReply, err := c.SendDistribution(context.Background(), &pb2.DistributionRequest2{
@@ -205,9 +212,9 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 		},
 	})
 
+	fmt.Println("Distribuyendo chunks a nodos incluidos en propuesta.")
+
 	if distributionReply.Machines[0].Status == 1 {
-		fmt.Println("Largo maquina 0: ")
-		fmt.Println(len(distributionReply.Machines[0].Distribution))
 		for j := 0; j < len(distributionReply.Machines[0].Distribution); j++ {
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[0].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[0].Distribution[j]].Chunk
@@ -238,8 +245,6 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 		}
 	}
 	if distributionReply.Machines[1].Status == 1 {
-		fmt.Println("Largo maquina 1: ")
-		fmt.Println(len(distributionReply.Machines[1].Distribution))
 		for j := 0; j < len(distributionReply.Machines[1].Distribution); j++ {
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[1].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[1].Distribution[j]].Chunk
@@ -271,8 +276,6 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 		}
 	}
 	if distributionReply.Machines[2].Status == 1 {
-		fmt.Println("Largo maquina 2: ")
-		fmt.Println(len(distributionReply.Machines[2].Distribution))
 		for j := 0; j < len(distributionReply.Machines[2].Distribution); j++ {
 			fileName := distributionReply.FileName + "_" + strconv.Itoa(int(s.file.chunks[distributionReply.Machines[2].Distribution[j]].ChunkIndex))
 			chunk := s.file.chunks[distributionReply.Machines[2].Distribution[j]].Chunk
@@ -328,6 +331,7 @@ func generateDistributedDistribution(s *server) (int32, int32, int32, int32) {
 	availableNodes := int32(0)
 
 	//Chequear Propuesta
+	fmt.Println("Verificando estado de los DataNode")
 	for i := 53; i < 56; i++ {
 		address := "dist" + strconv.Itoa(i) + port
 		if address != s.currentAddress {
@@ -400,6 +404,8 @@ func generateCentralizedDistribution(s *server) {
 		}
 	}
 
+	fmt.Println("Generando propuesta inicial incluyendo a los 3 nodos.")
+
 	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -408,9 +414,9 @@ func generateCentralizedDistribution(s *server) {
 
 	c := pb2.NewDataToNameServiceClient(conn)
 
-	fmt.Println("Datos a enviar a NameNode")
-	fmt.Println(s.file.fileName)
-	fmt.Println(s.file.totalParts)
+	// fmt.Println("Datos a enviar a NameNode")
+	// fmt.Println(s.file.fileName)
+	// fmt.Println(s.file.totalParts)
 
 	distributionReply, err := c.SendDistributionProposal(context.Background(), &pb2.DistributionRequest{
 		FileName:   s.file.fileName,
@@ -422,10 +428,22 @@ func generateCentralizedDistribution(s *server) {
 		},
 	})
 
-	fmt.Println("Estados")
-	fmt.Println(distributionReply.Machines[0].Status)
-	fmt.Println(distributionReply.Machines[1].Status)
-	fmt.Println(distributionReply.Machines[2].Status)
+	// fmt.Println("Estados")
+	// fmt.Println(distributionReply.Machines[0].Status)
+	// fmt.Println(distributionReply.Machines[1].Status)
+	// fmt.Println(distributionReply.Machines[2].Status)
+
+	if distributionReply.Machines[0].Status == 1 {
+		fmt.Println("Distribuyendo chunks a DataNode 53")
+	}
+
+	if distributionReply.Machines[1].Status == 1 {
+		fmt.Println("Distribuyendo chunks a DataNode 54")
+	}
+
+	if distributionReply.Machines[2].Status == 1 {
+		fmt.Println("Distribuyendo chunks a DataNode 55")
+	}
 
 	if distributionReply.Machines[0].Status == 1 {
 		for j := 0; j < len(distributionReply.Machines[0].Distribution); j++ {
