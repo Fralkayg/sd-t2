@@ -25,6 +25,8 @@ const (
 	port = ":50051"
 )
 
+//Descripción: Lee el archivo LOG retornando una estructura que contiene los libros disponibles
+//             junto a una estructura que contiene la ubicación de cada una de las partes que lo contiene
 func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogReply, error) {
 	f, err := os.Open("LOG.txt")
 
@@ -89,6 +91,7 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 	return &logReply, nil
 }
 
+//Descripción: Recibe la distribución aprobada por el DataNode registrando la información en el archivo LOG.txt
 func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionRequest2) (*pb2.DistributionReply2, error) {
 	for s.lock {
 
@@ -151,6 +154,9 @@ func (s *server) SendDistribution(ctx context.Context, in *pb2.DistributionReque
 
 }
 
+//Descripción: Recibe la propuesta de distribución inicial realizada por el DataNode.
+//             Verifica que la propuesta sea válida, de ser así la reenvia al DataNode.
+//			   En caso contrario, genera una nueva propuesta válida enviandola posteriormente al DataNode.
 func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.DistributionRequest) (*pb2.DistributionReply, error) {
 	for s.lock {
 
@@ -282,6 +288,7 @@ func (s *server) SendDistributionProposal(ctx context.Context, in *pb2.Distribut
 	}, nil
 }
 
+//Descripción: Función auxiliar para registrar en LOG.txt en el caso de que se encuentren dos DataNode disponibles.
 func makeDistribution(file *os.File, fileName string, address1 string, address2 string, result int32, i int) (int32, bool, int32, bool) {
 	var firstNodeDistribution int32
 	var secondNodeDistribution int32
@@ -299,12 +306,14 @@ func makeDistribution(file *os.File, fileName string, address1 string, address2 
 	return firstNodeDistribution, first, secondNodeDistribution, second
 }
 
+//Descripción: Escribe en el archivo que se envia como parametro la linea correspondiente que se envia como parametro.
 func writeToLogFile(file *os.File, line string) {
 	if _, err := file.WriteString(line); err != nil {
 		log.Fatal(err)
 	}
 }
 
+//Descripción: Verificar el estado de los DataNode.
 func checkNodeStatus(address string) int32 {
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {

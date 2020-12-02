@@ -32,6 +32,7 @@ type ChunkDownloaded struct {
 	chunkInfo []byte
 }
 
+//Descripcion: Función de prueba de comunicación
 func helloWorld(conn *grpc.ClientConn) {
 	c := pb.NewFileManagementServiceClient(conn)
 
@@ -41,6 +42,7 @@ func helloWorld(conn *grpc.ClientConn) {
 	fmt.Println("Mensaje: ", response.Mensaje)
 }
 
+//Descripción: Divide el archivo en chunks.
 func splitFile(targetFile string) ChunkedFile {
 	fileToBeChunked := "./Books/" + targetFile // change here!
 
@@ -95,6 +97,7 @@ func splitFile(targetFile string) ChunkedFile {
 	return chunkedFile
 }
 
+//Descripción: Obtiene la información de un Chunk almacenado en disco para su posterior envio a DataNode.
 func obtainChunk(filePath string) []byte {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -109,6 +112,7 @@ func obtainChunk(filePath string) []byte {
 }
 
 //https://flaviocopes.com/go-list-files/
+//Descripción: Mostrar biblioteca de libros disponibles para subir
 func displayLibrary() []string {
 	var files []string
 
@@ -136,6 +140,7 @@ func displayLibrary() []string {
 	return files
 }
 
+//Descripción: Sube los chunks a algún DataNode que se encuentre en línea.
 func uploadBook(option int) {
 	var validOption bool
 	var bookIndex int
@@ -201,6 +206,7 @@ func uploadBook(option int) {
 	}
 }
 
+//Descripción: Realiza la comunicación con el NameNode para desplegar la biblioteca de libros disponibles para descargar.
 func downloadBookMenu() {
 	conn, err := grpc.Dial(nameNodeAddress, grpc.WithInsecure())
 	if err != nil {
@@ -236,6 +242,7 @@ func downloadBookMenu() {
 	downloadBook(logReply.Files, option-1)
 }
 
+//Descripción: Obtiene cada chunks en el DataNode disponible para finalmente rearmar el archivo y guardarlo en la carpeta Downloads
 func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 	for i := 0; i < len(files); i++ {
 		if files[i].FileIndex == int32(option) {
@@ -299,6 +306,7 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 	return true
 }
 
+//Descripción: Despliega en menú las opciones para redirigir a subir archivo centralizado o distribuido.
 func centralizedOrDistributed() {
 	var validOption bool
 	var option int
@@ -336,6 +344,7 @@ func centralizedOrDistributed() {
 	}
 }
 
+//Descripción: Verifica el estado de los DataNode.
 func connectToDataNode() string {
 	for i := 53; i < 56; i++ {
 		address := "dist" + strconv.Itoa(i) + port
@@ -356,6 +365,7 @@ func connectToDataNode() string {
 	return ""
 }
 
+//Descripción: Verifica el estado de los DataNode
 func checkStatus(address string) (*grpc.ClientConn, int32) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {

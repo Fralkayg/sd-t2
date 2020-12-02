@@ -41,6 +41,7 @@ const (
 	defaultName     = "world"
 )
 
+//Descripción: Devuelve el Chunk solicitado.
 func (s *server) RetrieveChunk(ctx context.Context, in *pb.ChunkRequest) (*pb.ChunkReply, error) {
 	file, err := os.Open("./Chunks/" + in.FileName)
 	if err != nil {
@@ -54,6 +55,7 @@ func (s *server) RetrieveChunk(ctx context.Context, in *pb.ChunkRequest) (*pb.Ch
 	return &pb.ChunkReply{Chunk: content}, nil
 }
 
+//Descripción: Almacena el Chunk en disco.
 func (s *server) SaveChunk(ctx context.Context, in *pb.StoreChunkRequest) (*pb.StoreChunkReply, error) {
 	_, err := os.Create("Chunks/" + in.FileName)
 
@@ -66,15 +68,18 @@ func (s *server) SaveChunk(ctx context.Context, in *pb.StoreChunkRequest) (*pb.S
 	return &pb.StoreChunkReply{Status: "OK"}, nil
 }
 
+//Descripción: Verificar el estado del DataNode.
 func (s *server) CheckNodeStatus(ctx context.Context, in *pb.StatusRequest) (*pb.StatusReply, error) {
 	return &pb.StatusReply{Online: true}, nil
 }
 
+//Descripción: Función de prueba de comunicación.
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.GetMensaje())
 	return &pb.HelloReply{Mensaje: "Hello " + in.GetMensaje()}, nil
 }
 
+//Descripción: Recibe los chunks que envia el cliente para posteriormente hacer la distribución correspondiente escogida por este.
 func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.ChunkStatus, error) {
 	for s.lock {
 	}
@@ -138,6 +143,7 @@ func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.C
 	return &pb.ChunkStatus{Status: "Se recibio el archivo " + in.FileName}, nil
 }
 
+//Descripción: Genera una distribución válida de acuerdo a los nodos que se encuentran disponibles.
 func generateDistribution(s *server, availableNodes int32, totalParts int, firstNodeStatus int32, secondNodeStatus int32, thirdNodeStatus int32) {
 	var firstNodeDistribution []int32
 	var secondNodeDistribution []int32
@@ -310,6 +316,7 @@ func generateDistribution(s *server, availableNodes int32, totalParts int, first
 
 }
 
+//Descripción: Función auxiliar para la generación de distribución valida.
 func makeLocalDistribution(address1 string, address2 string, result int32, i int) (int32, bool, int32, bool) {
 	var firstNodeDistribution int32
 	var secondNodeDistribution int32
@@ -325,6 +332,7 @@ func makeLocalDistribution(address1 string, address2 string, result int32, i int
 	return firstNodeDistribution, first, secondNodeDistribution, second
 }
 
+//Descripción: Se encarga de verificar el estado de los nodos para poder hacer una generación de propuesta válida.
 func generateDistributedDistribution(s *server) (int32, int32, int32, int32) {
 	firstNodeStatus := int32(0)
 	secondNodeStatus := int32(0)
@@ -371,6 +379,7 @@ func generateDistributedDistribution(s *server) (int32, int32, int32, int32) {
 
 }
 
+//Descripción: Verifica el estado de los nodos.
 func checkNodeStatus(address string) int32 {
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
@@ -388,6 +397,9 @@ func checkNodeStatus(address string) int32 {
 	return 1
 }
 
+//Descripción: Genera una propuesta inicial de distribución centralizada la cual es enviada al NameNode.
+//             Luego de recibir la respuesta del NameNode, procede a realizar la distribución de chunks de acuerdo a la distribución
+//aceptada o a la nueva distribución entregada por el NameNode.
 func generateCentralizedDistribution(s *server) {
 	var firstNodeDistribution []int32
 	var secondNodeDistribution []int32
@@ -549,6 +561,7 @@ func generateCentralizedDistribution(s *server) {
 	fmt.Println(distributionReply.FileName)
 }
 
+//Descripción: Almacena los Chunks en disco.
 func saveChunks(s *server, distributionReply *pb2.DistributionReply) {
 	for i := 0; i < s.file.totalParts; i++ {
 		fileName := s.file.fileName + "_" + strconv.Itoa(int(s.file.chunks[i].ChunkIndex))
