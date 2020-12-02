@@ -211,6 +211,11 @@ func downloadBookMenu() {
 		return
 	}
 
+	if len(logReply.Files) == 0 {
+		fmt.Println("No hay libros disponibles para descargar.")
+		return
+	}
+
 	validOption := true
 	var option int
 	for validOption {
