@@ -157,8 +157,6 @@ func uploadBook(option int) {
 			}
 			defer conn.Close()
 
-			fmt.Println("paso")
-
 			var chunkInformation pb.ChunkInformation
 			chunkInformation.FileName = chunkedFile.FileName
 			chunkInformation.TotalParts = int32(chunkedFile.TotalParts)
@@ -279,6 +277,8 @@ func downloadBook(files []*pb2.LogReply_FileInfo, option int) bool {
 
 					file.Sync()
 				}
+
+				fmt.Println("Libro descargado a carpeta Downloads")
 
 				file.Close()
 				return true

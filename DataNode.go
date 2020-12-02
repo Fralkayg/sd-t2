@@ -115,8 +115,6 @@ func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.C
 				availableNodes = nodes
 			}
 		}
-		fmt.Println("Salio del ciclo. Estados:")
-		fmt.Println("Nodos disponibles: " + strconv.Itoa(int(availableNodes)))
 		if firstNodeStatus == 1 {
 			fmt.Println("DataNode 53 incluido en propuesta")
 		}
