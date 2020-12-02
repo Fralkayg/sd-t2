@@ -108,6 +108,9 @@ func (s *server) SendChunks(ctx context.Context, in *pb.ChunkInformation) (*pb.C
 			first, second, third, nodes := generateDistributedDistribution(s)
 			if nodes == availableNodes {
 				notValid = false
+				firstNodeStatus = 1
+				secondNodeStatus = 1
+				thirdNodeStatus = 1
 			} else {
 				firstNodeStatus = first
 				secondNodeStatus = second
