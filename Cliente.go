@@ -210,10 +210,6 @@ func downloadBookMenu() {
 		fmt.Println("Error al leer el archivo LOG")
 		return
 	}
-	if logReply == nil {
-		fmt.Println("No hay libros disponibles para descargar.")
-		return
-	}
 
 	validOption := true
 	var option int
