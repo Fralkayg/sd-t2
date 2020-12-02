@@ -28,7 +28,8 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 	f, err := os.Open("LOG.txt")
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error al leer el archivo LOG")
+		return nil, nil
 	}
 
 	defer f.Close()
@@ -67,7 +68,8 @@ func (s *server) ReadLogFile(ctx context.Context, in *pb2.LogRequest) (*pb2.LogR
 		j++
 	}
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		fmt.Println("Error al leer el archivo LOG")
+		return nil, nil
 	}
 
 	//ESTO FUNCIONA
