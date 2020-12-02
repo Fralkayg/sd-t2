@@ -418,7 +418,8 @@ func main() {
 		fmt.Println("Ingrese una opción válida:")
 		fmt.Println("1: Subir libro")
 		fmt.Println("2: Descargar libro")
-		fmt.Println("3: Salir")
+		fmt.Println("3: Ver listado de libros subidos")
+		fmt.Println("4: Salir")
 		fmt.Scanln(&option)
 		switch option {
 		case 1:
